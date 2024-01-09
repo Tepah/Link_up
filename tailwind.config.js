@@ -20,6 +20,13 @@ export default {
         normal: '400',
         bold: '700',
       },
+      colors: {
+        'text': '#09180f',
+        'background': '#f6fcf8',
+        'primary': '#95ffba',
+        'secondary': '#94e4b0',
+        'accent': '#61dd8c',
+      },
     },
   },
   plugins: [],
