@@ -23,6 +23,14 @@ export const upcomingPlans = [
     attending: [
       'John', 'Michael', 'Sarah'
     ]
+  },
+  {
+    id: 3,
+    title: 'Popeyes',
+    date: '2023-01-16',
+    attending: [
+      'John', 'Michael', 'Sarah'
+    ]
   }
 ]
 
@@ -30,8 +38,21 @@ export const incompletePlan = [
   {
     id: 1,
     title: 'Dinner with friends',
-    date: '2021-09-01',
-    attending: [
+    schedules: [
+      'John', 'Michael', 'Sarah'
+    ]
+  },
+  {
+    id: 1,
+    title: 'Dinner with friends',
+    schedules: [
+      'John', 'Michael', 'Sarah'
+    ]
+  },
+  {
+    id: 1,
+    title: 'Dinner with friends',
+    schedules: [
       'John', 'Michael', 'Sarah'
     ]
   }
