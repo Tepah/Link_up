@@ -4,7 +4,7 @@
 
 
 <div class={"flex items-center justify-center h-screen bg-background"}>
-    <div class="text-center">
+    <div class="flex-shrink flex flex-col self-start md:self-center text-center sm:h-screen md:h-[63%] overflow-auto m-10">
         <slot />
     </div>
 </div>

@@ -55,5 +55,5 @@ export const incompletePlan = [
     schedules: [
       'John', 'Michael', 'Sarah'
     ]
-  }
+  },
 ]
