@@ -3,15 +3,13 @@
     import profilePic from "$lib/images/profile.jpeg";
 </script>
 
-<div class="flex flex-col justify-center items-center w-[80%] h-[70%]">
-    <div class="p-2">
-        <h1 class="text-2xl font-semibold h-[10%]">Settings</h1>
-    </div>
-    <div class="flex flex-col justify-between items-center p-2 h-[35%]">
-        <img src={profilePic} alt="profile" class="rounded-full w-36 h-36"/>
+<div class="flex flex-col justify-center items-center w-[80%] space-y-4">
+    <h1 class="text-2xl font-semibold">Settings</h1>
+    <div class="flex flex-col justify-center space-y-4 items-center p-2">
+        <img src={profilePic} alt="profile" class="rounded-full w-40 h-40"/>
         <button class="py-1 px-6 bg-primary text-lg rounded-xl">Change picture</button>
     </div>
-    <div class="flex-1 flex flex-col justify-evenly w-[80%] h-[40%]">
+    <div class="flex-1 flex flex-col justify-between w-[80%] space-y-4">
         <div class="flex flex-row justify-between items-center">
             <label for="toggle" class="cursor-pointer">Dark Mode</label>
             <input id="toggle" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600">
