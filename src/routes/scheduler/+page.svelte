@@ -2,6 +2,10 @@
   import Calendar from "$lib/components/Calendar.svelte";
 
   let selectedDates: Date[] = [];
+
+  const handleSubmit = () => {
+    console.log(selectedDates);
+  };
 </script>
 
 
