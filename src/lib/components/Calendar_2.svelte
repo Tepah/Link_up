@@ -1,10 +1,13 @@
 <script lang="ts">
     export let selectedDates: (Date | null | undefined)[] = [];
+    export let availableDates: Date[];
     import {onMount} from "svelte";
+
+    console.log(availableDates);
 
     const MONTHS = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
-        'September', 'October', 'November','December'
+        'September', 'October', 'November', 'December'
     ];
     const currentDate = new Date();
 
@@ -31,27 +34,27 @@
     let daysFromPrevMonth = firstDayOfWeek === 0 ? 6 : firstDayOfWeek;
     let daysFromNextMonth = 35 - (daysInMonth(year, month) + daysFromPrevMonth);
 
-    let prevMonthDates = Array.from({ length: daysFromPrevMonth }, (_, index) => {
+    let prevMonthDates = Array.from({length: daysFromPrevMonth}, (_, index) => {
         const prevMonth = month === 0 ? 11 : month - 1;
         const prevMonthYear = month === 0 ? year - 1 : year;
         const lastDayPrevMonth = daysInMonth(prevMonthYear, prevMonth);
         const day = lastDayPrevMonth - daysFromPrevMonth + index + 1;
         let selected = checkDateSelected(new Date(prevMonthYear, prevMonth, day));
-        return { date: day, isSelected: selected, hover: false, isPrevMonth: true, isNextMonth: false };
+        return {date: day, isSelected: selected, hover: false, isPrevMonth: true, isNextMonth: false};
     });
 
-    let currentMonthDates = Array.from({ length: daysInMonth(year, month) }, (_, index) => {
+    let currentMonthDates = Array.from({length: daysInMonth(year, month)}, (_, index) => {
         const day = index + 1;
         let selected = checkDateSelected(new Date(year, month, day));
-        return { date: day, isSelected: selected, hover: false, isPrevMonth: false, isNextMonth: false };
+        return {date: day, isSelected: selected, hover: false, isPrevMonth: false, isNextMonth: false};
     });
 
-    let nextMonthDates = Array.from({ length: daysFromNextMonth }, (_, index) => {
+    let nextMonthDates = Array.from({length: daysFromNextMonth}, (_, index) => {
         const nextMonth = month === 11 ? 0 : month + 1; // Adjust for December
         const nextMonthYear = month === 11 ? year + 1 : year;
         const day = index + 1;
         let selected = checkDateSelected(new Date(nextMonthYear, nextMonth, day));
-        return { date: day, isSelected: selected, hover: false, isNextMonth: true, isPrevMonth: false };
+        return {date: day, isSelected: selected, hover: false, isNextMonth: true, isPrevMonth: false};
     });
 
     let dates = [...prevMonthDates, ...currentMonthDates, ...nextMonthDates];
@@ -105,11 +108,6 @@
             const minIndex = Math.min(startIdx, endIdx);
             const maxIndex = Math.max(startIdx, endIdx);
 
-            if (checkBeforeToday(new Date(year, month, dates[minIndex].date), dates[minIndex].isPrevMonth,
-                dates[minIndex].isNextMonth)) {
-                return;
-            }
-
             if (dates[minIndex].isSelected && dates[maxIndex].isSelected) {
                 for (let i = minIndex; i <= maxIndex; i++) {
                     dates[i].isSelected = false;
@@ -130,27 +128,27 @@
         daysFromPrevMonth = firstDayOfWeek === 0 ? 6 : firstDayOfWeek;
         daysFromNextMonth = 35 - (daysInMonth(year, month) + daysFromPrevMonth);
 
-        prevMonthDates = Array.from({ length: daysFromPrevMonth }, (_, index) => {
+        prevMonthDates = Array.from({length: daysFromPrevMonth}, (_, index) => {
             const prevMonth = month === 0 ? 11 : month - 1;
             const prevMonthYear = month === 0 ? year - 1 : year;
             const lastDayPrevMonth = daysInMonth(prevMonthYear, prevMonth);
             const day = lastDayPrevMonth - daysFromPrevMonth + index + 1;
             const selected = checkDateSelected(new Date(prevMonthYear, prevMonth, day));
-            return { date: day, isSelected: selected, hover: false, isPrevMonth: true, isNextMonth: false };
+            return {date: day, isSelected: selected, hover: false, isPrevMonth: true, isNextMonth: false};
         });
 
-        currentMonthDates = Array.from({ length: daysInMonth(year, month) }, (_, index) => {
+        currentMonthDates = Array.from({length: daysInMonth(year, month)}, (_, index) => {
             const day = index + 1;
             const selected = checkDateSelected(new Date(year, month, day));
-            return { date: day, isSelected: selected, hover: false, isPrevMonth: false, isNextMonth: false };
+            return {date: day, isSelected: selected, hover: false, isPrevMonth: false, isNextMonth: false};
         });
 
-        nextMonthDates = Array.from({ length: daysFromNextMonth }, (_, index) => {
+        nextMonthDates = Array.from({length: daysFromNextMonth}, (_, index) => {
             const nextMonth = month === 11 ? 0 : month + 1; // Adjust for December
             const nextMonthYear = month === 11 ? year + 1 : year;
             const day = index + 1;
             const selected = checkDateSelected(new Date(nextMonthYear, nextMonth, day));
-            return { date: day, isSelected: selected, hover: false, isNextMonth: true, isPrevMonth: false };
+            return {date: day, isSelected: selected, hover: false, isNextMonth: true, isPrevMonth: false};
         });
 
         dates = [...prevMonthDates, ...currentMonthDates, ...nextMonthDates];
@@ -165,39 +163,40 @@
         daysFromPrevMonth = firstDayOfWeek === 0 ? 6 : firstDayOfWeek;
         daysFromNextMonth = 35 - (daysInMonth(year, month) + daysFromPrevMonth);
 
-        prevMonthDates = Array.from({ length: daysFromPrevMonth }, (_, index) => {
+        prevMonthDates = Array.from({length: daysFromPrevMonth}, (_, index) => {
             const prevMonth = month === 0 ? 11 : month - 1;
             const prevMonthYear = month === 0 ? year - 1 : year;
             const lastDayPrevMonth = daysInMonth(prevMonthYear, prevMonth);
             const day = lastDayPrevMonth - daysFromPrevMonth + index + 1;
             const selected = checkDateSelected(new Date(prevMonthYear, prevMonth, day));
-            return { date: day, isSelected: selected, hover: false, isPrevMonth: true, isNextMonth: false };
+            return {date: day, isSelected: selected, hover: false, isPrevMonth: true, isNextMonth: false};
         });
 
-        currentMonthDates = Array.from({ length: daysInMonth(year, month) }, (_, index) => {
+        currentMonthDates = Array.from({length: daysInMonth(year, month)}, (_, index) => {
             const day = index + 1;
             const selected = checkDateSelected(new Date(year, month, day));
-            return { date: day, isSelected: selected, hover: false, isPrevMonth: false, isNextMonth: false };
+            return {date: day, isSelected: selected, hover: false, isPrevMonth: false, isNextMonth: false};
         });
 
-        nextMonthDates = Array.from({ length: daysFromNextMonth }, (_, index) => {
+        nextMonthDates = Array.from({length: daysFromNextMonth}, (_, index) => {
             const nextMonth = month === 11 ? 0 : month + 1;
             const nextMonthYear = month === 11 ? year + 1 : year;
             const day = index + 1;
             const selected = checkDateSelected(new Date(nextMonthYear, nextMonth, day));
-            return { date: day, isSelected: selected, hover: false, isNextMonth: true, isPrevMonth: false };
+            return {date: day, isSelected: selected, hover: false, isNextMonth: true, isPrevMonth: false};
         });
 
         dates = [...prevMonthDates, ...currentMonthDates, ...nextMonthDates];
     }
 
-    const checkBeforeToday = (date, prevMonth, nextMonth) => {
-        if (nextMonth) return false;
-        if (prevMonth) {
-            if (year < currentDate.getFullYear()) return true;
-            if (date.getMonth() === currentDate.getMonth()) return true;
+    const checkNotAvailable = (date, prevMonth, nextMonth) => {
+        if (nextMonth) {
+            if (availableDates) return availableDates.find(d => d.getTime() ===
+                        new Date(year, month + 1, date.getDate()).getTime()) === undefined;
+        } else
+        {
+            if (availableDates) return availableDates.find(d => d.getTime() === date.getTime()) === undefined;
         }
-        return date.getTime() < today.getTime();
     }
 
     const updateSelectedDates = () => {
@@ -225,18 +224,20 @@
 <div class="flex flex-col justify-evenly bg-secondary bg-opacity-10 rounded-2xl space-y-3 p-2">
     <div class="flex flex-row justify-evenly text-accent">
         <button on:click={handlePrevClick}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
             </svg>
         </button>
         <p>{MONTHS[month]} {year}</p>
         <button on:click={handleNextClick}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                 stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>
             </svg>
         </button>
     </div>
-    <div role="button" tabindex="0" class="grid grid-cols-7 gap-4" on:mouseup={handleMouseUp}>
+    <div role="none" class="grid grid-cols-7 gap-4" on:mouseup={handleMouseUp}>
         <p class="w-5 text-accent">S</p>
         <p class="w-5 text-accent">M</p>
         <p class="w-5 text-accent">T</p>
@@ -244,23 +245,23 @@
         <p class="w-5 text-accent">T</p>
         <p class="w-5 text-accent">F</p>
         <p class="w-5 text-accent">S</p>
-        {#each dates as { date, isSelected, hover, isPrevMonth, isNextMonth }, index}
+        {#each dates as {date, isSelected, hover, isPrevMonth, isNextMonth}, index}
             <button
                     class="date p-2 rounded-2xl bg-opacity-70"
-                    class:old-date={checkBeforeToday(new Date(year, month, date), isPrevMonth, isNextMonth)}
+                    class:old-date={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth)}
                     class:bg-secondary={hover}
                     class:bg-accent={isSelected}
                     class:range={isDragging && index >= Math.min(startIdx, endIdx) && index <= Math.max(startIdx, endIdx)}
                     class:text-black={!isPrevMonth && !isNextMonth || isSelected || hover}
-                    class:text-opacity-70={!isPrevMonth && !isNextMonth}
-                    class:text-accent={isPrevMonth || isNextMonth}
-                    class:text-opacity-40={isPrevMonth || isNextMonth}
                     class:text-opacity-100={isSelected || hover}
-                    on:click={()=>handleDateClick(index)}
-                    on:mousedown={() => handleMouseDown(index)}
-                    on:mouseenter={() => handleMouseEnter(index)}
+                    on:click={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth) ? null : () => {
+                      handleDateClick(index)}}
+                    on:mousedown={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth) ? null : () => {
+                      handleMouseDown(index)}}
+                    on:mouseenter={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth) ? null : () => {
+                      handleMouseEnter(index)}}
             >
-            {date}
+                {date}
             </button>
         {/each}
     </div>
@@ -268,9 +269,11 @@
 
 <style>
     .old-date {
+        cursor: default;
         color: #000000;
         opacity: 0.1;
     }
+
     .date {
         transition: background-color 0.3s ease-in-out;
     }
