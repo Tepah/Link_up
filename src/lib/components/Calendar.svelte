@@ -8,7 +8,7 @@
     ];
     const currentDate = new Date();
 
-    let today = new Date();
+    let today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
     let year = today.getFullYear();
     let month = today.getMonth();
     let isDragging = false;
@@ -105,6 +105,11 @@
             const minIndex = Math.min(startIdx, endIdx);
             const maxIndex = Math.max(startIdx, endIdx);
 
+            if (checkBeforeToday(new Date(year, month, dates[minIndex].date), dates[minIndex].isPrevMonth,
+                dates[minIndex].isNextMonth)) {
+                return;
+            }
+
             if (dates[minIndex].isSelected && dates[maxIndex].isSelected) {
                 for (let i = minIndex; i <= maxIndex; i++) {
                     dates[i].isSelected = false;
@@ -186,6 +191,15 @@
         dates = [...prevMonthDates, ...currentMonthDates, ...nextMonthDates];
     }
 
+    const checkBeforeToday = (date, prevMonth, nextMonth) => {
+        if (nextMonth) return false;
+        if (prevMonth) {
+            if (year < currentDate.getFullYear()) return true;
+            if (date.getMonth() === currentDate.getMonth()) return true;
+        }
+        return date.getTime() < today.getTime();
+    }
+
     const updateSelectedDates = () => {
         dates.filter(date => date.isSelected).forEach(date => {
             const selectedMonth = date.isPrevMonth ? month === 0 ? 11 : month - 1 : date.isNextMonth ? month === 11 ? 0 : month + 1 : month;
@@ -233,14 +247,15 @@
         {#each dates as { date, isSelected, hover, isPrevMonth, isNextMonth }, index}
             <button
                     class="date p-2 rounded-2xl bg-opacity-70"
+                    class:old-date={checkBeforeToday(new Date(year, month, date), isPrevMonth, isNextMonth)}
                     class:bg-secondary={hover}
                     class:bg-accent={isSelected}
-                    class:text-opacity-100={isSelected || hover}
                     class:range={isDragging && index >= Math.min(startIdx, endIdx) && index <= Math.max(startIdx, endIdx)}
-                    class:text-black={!isPrevMonth && !isNextMonth}
+                    class:text-black={!isPrevMonth && !isNextMonth || isSelected || hover}
                     class:text-opacity-70={!isPrevMonth && !isNextMonth}
                     class:text-accent={isPrevMonth || isNextMonth}
                     class:text-opacity-40={isPrevMonth || isNextMonth}
+                    class:text-opacity-100={isSelected || hover}
                     on:click={()=>handleDateClick(index)}
                     on:mousedown={() => handleMouseDown(index)}
                     on:mouseenter={() => handleMouseEnter(index)}
@@ -252,6 +267,10 @@
 </div>
 
 <style>
+    .old-date {
+        color: #000000;
+        opacity: 0.1;
+    }
     .date {
         transition: background-color 0.3s ease-in-out;
     }
