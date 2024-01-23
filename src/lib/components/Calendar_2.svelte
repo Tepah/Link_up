@@ -237,7 +237,7 @@
             </svg>
         </button>
     </div>
-    <div role="none" class="grid grid-cols-7 gap-4" on:mouseup={handleMouseUp}>
+    <div role="none" class="grid grid-cols-7 gap-2 md:gap-4" on:mouseup={handleMouseUp}>
         <p class="w-5 text-accent">S</p>
         <p class="w-5 text-accent">M</p>
         <p class="w-5 text-accent">T</p>
@@ -247,12 +247,13 @@
         <p class="w-5 text-accent">S</p>
         {#each dates as {date, isSelected, hover, isPrevMonth, isNextMonth}, index}
             <button
-                    class="date p-2 rounded-2xl bg-opacity-70"
+                    class="date p-2 rounded-3xl bg-opacity-70"
                     class:old-date={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth)}
                     class:bg-secondary={hover}
                     class:bg-accent={isSelected}
                     class:range={isDragging && index >= Math.min(startIdx, endIdx) && index <= Math.max(startIdx, endIdx)}
                     class:text-black={!isPrevMonth && !isNextMonth || isSelected || hover}
+                    class:text-accent={isPrevMonth || isNextMonth}
                     class:text-opacity-100={isSelected || hover}
                     on:click={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth) ? null : () => {
                       handleDateClick(index)}}

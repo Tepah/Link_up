@@ -233,7 +233,7 @@
             </svg>
         </button>
     </div>
-    <div role="none" class="grid grid-cols-7 gap-4" on:mouseup={handleMouseUp}>
+    <div role="none" class="grid grid-cols-7 gap-2 md:gap-4" on:mouseup={handleMouseUp}>
         <p class="w-5 text-accent">S</p>
         <p class="w-5 text-accent">M</p>
         <p class="w-5 text-accent">T</p>
@@ -243,7 +243,7 @@
         <p class="w-5 text-accent">S</p>
         {#each dates as {date, isSelected, hover, isPrevMonth, isNextMonth}, index}
             <button
-                    class="date p-2 rounded-2xl bg-opacity-70"
+                    class="date p-2 rounded-3xl bg-opacity-70"
                     class:old-date={checkBeforeToday(new Date(year, month, date), isPrevMonth, isNextMonth)}
                     class:bg-secondary={hover}
                     class:bg-accent={isSelected}

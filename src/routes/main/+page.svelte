@@ -4,7 +4,7 @@
     import Settings from "$lib/components/Settings.svelte";
     export let data;
 
-    // Using this to create a toggle for a list to show all upcoming plans. Will use for animation.
+
     let showAllUpcoming = false;
     let showAllIncomplete = false;
     let settingsOpen = false;
