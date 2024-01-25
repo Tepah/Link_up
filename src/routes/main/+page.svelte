@@ -130,7 +130,7 @@
                 {/if}
             </div>
             <div class="p-2">
-                <a href="/scheduler" class="planItem py-3 px-8 bg-primary text-lg rounded-xl inline-block">New Plan</a>
+                <a href="/create" class="planItem py-3 px-8 bg-primary text-lg rounded-xl inline-block">New Plan</a>
             </div>
             {/if}
         </div>
