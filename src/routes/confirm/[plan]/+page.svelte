@@ -28,6 +28,10 @@
         }, 3000);
     }
 
+    const handleScheduleClick = () => {
+        window.location.href = '/confirm/420/created'
+    }
+
     availableDates = findCommonDates();
 </script>
 
@@ -45,7 +49,7 @@
         <Calendar selectedDate={selectedDate} availableDates={availableDates} />
     </div>
     <div class="flex flex-row justify-evenly">
-        <button class="bg-primary py-2 px-10 rounded text-lg">Schedule</button>
+        <button on:click={() => handleScheduleClick()} class="bg-primary py-2 px-10 rounded text-lg">Schedule</button>
     </div>
     <div class="flex flex-col pt-5 space-y-2 items-center">
         <p class="text-lg">Share link for more availability</p>
