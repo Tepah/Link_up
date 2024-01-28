@@ -1,6 +1,22 @@
 <script>
+    import Cookies from 'js-cookie';
+
     let name = '';
     let description = '';
+
+    const createCookie = () => {
+      console.log(name, description)
+        Cookies.set('planName', name, { expires: 1 });
+        Cookies.set('planDescription', description, { expires: 1 });
+        let token = Cookies.get('planName')
+        console.log(token);
+        window.location.href = '/scheduler'
+    };
+
+    // TODO: use this for future LOGIN
+    // $: if (Cookies.get('token') === undefined) {
+    //     window.location.href = '/main';
+    // }
 </script>
 
 <div class="flex flex-col space-y-6 w-[100%]">
@@ -20,7 +36,7 @@
         <textarea class="rounded-lg p-2 shadow shadow-accent" style="resize:none;" rows="6" id="description" bind:value={description} placeholder="Describe what fun things you're planning!"></textarea>
     </form>
     <div class="flex flex-row justify-evenly">
-        <button class="bg-primary py-2 px-10 rounded-lg text-lg" type="submit" on:click={() => console.log(name, description)}>Submit</button>
+        <button class="bg-primary py-2 px-10 rounded-lg text-lg" type="submit" on:click={createCookie}>Submit</button>
     </div>
 </div>
 

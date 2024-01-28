@@ -1,6 +1,7 @@
 <script lang="ts">
-    export let selectedDates: (Date | null | undefined)[] = [];
+    export let selectedDate: Date | null | undefined = null;
     export let availableDates: Date[];
+
     import {onMount} from "svelte";
 
     console.log(availableDates);
@@ -22,11 +23,10 @@
     const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
     const checkDateSelected = (date) => {
         let selected = false;
-        selectedDates.forEach(d => {
-            if (d.getTime() === date.getTime()) {
-                selected = true;
-            }
-        });
+        if (selectedDate && selectedDate.getTime() === date.getTime())
+        {
+            selected = true;
+        }
         return selected;
     }
 
@@ -61,7 +61,7 @@
 
 
     const handleDateClick = (index) => {
-        updateSelectedRange();
+        dates[index].isSelected = !dates[index].isSelected;
     };
 
     const handleMouseDown = (index) => {
@@ -71,15 +71,8 @@
         highlightHover();
     };
 
-    const handleMouseEnter = (index) => {
-        if (isDragging) {
-            endIdx = index;
-            highlightHover();
-        }
-    };
-
     const handleMouseUp = () => {
-        updateSelectedRange();
+        dates[startIdx].isSelected = !dates[startIdx].isSelected
         dates.forEach((date) => {
             date.hover = false;
         });
@@ -102,23 +95,6 @@
             }
         }
     }
-
-    const updateSelectedRange = () => {
-        if (startIdx !== null && endIdx !== null) {
-            const minIndex = Math.min(startIdx, endIdx);
-            const maxIndex = Math.max(startIdx, endIdx);
-
-            if (dates[minIndex].isSelected && dates[maxIndex].isSelected) {
-                for (let i = minIndex; i <= maxIndex; i++) {
-                    dates[i].isSelected = false;
-                }
-            } else {
-                for (let i = minIndex; i <= maxIndex; i++) {
-                    dates[i].isSelected = true;
-                }
-            }
-        }
-    };
 
     const handleNextClick = () => {
         updateSelectedDates();
@@ -202,17 +178,9 @@
     const updateSelectedDates = () => {
         dates.filter(date => date.isSelected).forEach(date => {
             const selectedMonth = date.isPrevMonth ? month === 0 ? 11 : month - 1 : date.isNextMonth ? month === 11 ? 0 : month + 1 : month;
-            const selectedDate = new Date(year, selectedMonth, date.date);
-            if (!selectedDates.find(d => d.getTime() === selectedDate.getTime())) {
-                selectedDates.push(selectedDate);
-            }
+            selectedDate = new Date(year, selectedMonth, date.date);
         });
-        sortDates();
-        console.log(selectedDates);
-    }
-
-    $: sortDates = () => {
-        selectedDates.sort((a, b) => a.getTime() - b.getTime());
+        console.log(selectedDate);
     }
 
     onMount(() => {
@@ -259,8 +227,6 @@
                       handleDateClick(index)}}
                     on:mousedown={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth) ? null : () => {
                       handleMouseDown(index)}}
-                    on:mouseenter={checkNotAvailable(new Date(year, month, date), isPrevMonth, isNextMonth) ? null : () => {
-                      handleMouseEnter(index)}}
             >
                 {date}
             </button>

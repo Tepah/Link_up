@@ -2,7 +2,7 @@
     import Calendar from '$lib/components/Calendar_2.svelte';
     export let data;
 
-    let selectedDates: (Date | undefined | null)[] | undefined = [];
+    let selectedDate: Date | null = null;
     let availableDates: Date[] = [];
     let copiedToClipboard: boolean = false;
 
@@ -42,7 +42,7 @@
     <div class="flex flex-col pt-20 md:pt-0">
         <p class="text-lg">Choose a time for the plan: </p>
         <p>based on <span class="text-accent">{data.plan.schedules.length} schedules</span></p>
-        <Calendar selectedDates={selectedDates} availableDates={availableDates} />
+        <Calendar selectedDate={selectedDate} availableDates={availableDates} />
     </div>
     <div class="flex flex-row justify-evenly">
         <button class="bg-primary py-2 px-10 rounded text-lg">Schedule</button>
