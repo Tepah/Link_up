@@ -1,10 +1,11 @@
 <script lang="ts">
     import Calendar from '$lib/components/Calendar_2.svelte';
+    import { selectedDate } from '$lib/components/store.js';
     export let data;
 
-    let selectedDate: Date | null = null;
     let availableDates: Date[] = [];
     let copiedToClipboard: boolean = false;
+    let noSelectedDate: boolean = false;
 
     const findCommonDates = () => {
         let firstArray = data.plan.schedules[0].available.map(date => new Date(date));
@@ -29,6 +30,14 @@
     }
 
     const handleScheduleClick = () => {
+        console.log($selectedDate);
+        if (!selectedDate) {
+            noSelectedDate = true;
+            setTimeout(() => {
+                noSelectedDate = false;
+            }, 3000);
+            return;
+        }
         window.location.href = '/confirm/420/created'
     }
 
@@ -46,10 +55,13 @@
     <div class="flex flex-col pt-20 md:pt-0">
         <p class="text-lg">Choose a time for the plan: </p>
         <p>based on <span class="text-accent">{data.plan.schedules.length} schedules</span></p>
-        <Calendar selectedDate={selectedDate} availableDates={availableDates} />
+        <Calendar availableDates={availableDates} />
     </div>
     <div class="flex flex-row justify-evenly">
         <button on:click={() => handleScheduleClick()} class="bg-primary py-2 px-10 rounded text-lg">Schedule</button>
+        {#if noSelectedDate}
+            <p class="absolute null-date-error text-accent pt-14">Please select a date</p>
+        {/if}
     </div>
     <div class="flex flex-col pt-5 space-y-2 items-center">
         <p class="text-lg">Share link for more availability</p>
@@ -64,10 +76,29 @@
 
 <style>
     .copied-text {
-        animation: fadeOut 2.5s ease-in forwards;
+        animation: exitAnimation 2.5s ease-in forwards;
+    }
+
+    .null-date-error {
+        animation: fadeOut 3s ease-in forwards;
     }
 
     @keyframes fadeOut {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 1;
+        }
+        75% {
+            opacity: 0.5;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes exitAnimation {
         0% {
             opacity: 1;
             transform: rotate(0deg) translateY(0px);
@@ -78,11 +109,11 @@
         }
         75% {
             opacity: 0.5;
-            transform: rotate(5deg) translateY(15px);
+            transform: rotate(5deg) translateY(12px);
         }
         100% {
             opacity: 0;
-            transform: rotate(-5deg) translateY(30px);
+            transform: rotate(-5deg) translateY(20px);
         }
     }
 </style>

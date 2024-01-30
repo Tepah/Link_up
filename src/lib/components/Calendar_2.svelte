@@ -1,10 +1,8 @@
 <script lang="ts">
-    export let selectedDate: Date | null | undefined = null;
     export let availableDates: Date[];
 
     import {onMount} from "svelte";
-
-    console.log(availableDates);
+    import { selectedDate } from "./store.js";
 
     const MONTHS = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -23,7 +21,7 @@
     const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay();
     const checkDateSelected = (date) => {
         let selected = false;
-        if (selectedDate && selectedDate.getTime() === date.getTime())
+        if ($selectedDate && $selectedDate.getTime() === date.getTime())
         {
             selected = true;
         }
@@ -61,7 +59,6 @@
 
 
     const handleDateClick = (index) => {
-        dates[index].isSelected = !dates[index].isSelected;
     };
 
     const handleMouseDown = (index) => {
@@ -72,13 +69,26 @@
     };
 
     const handleMouseUp = () => {
-        dates[startIdx].isSelected = !dates[startIdx].isSelected
         dates.forEach((date) => {
             date.hover = false;
         });
+        if (!startIdx) return;
+        if (dates[startIdx].isSelected) {
+            dates[startIdx].isSelected = false;
+            $selectedDate = null;
+            startIdx = null;
+            endIdx = null;
+            isDragging = false;
+            return;
+        }
+        dates.forEach((date) => {
+            date.isSelected = false;
+        });
+        dates[startIdx].isSelected = true;
         isDragging = false;
         startIdx = null;
         endIdx = null;
+        updateselectedDates();
     };
 
     const highlightHover = () => {
@@ -97,7 +107,7 @@
     }
 
     const handleNextClick = () => {
-        updateSelectedDates();
+        updateselectedDates();
         month = month === 11 ? 0 : month + 1;
         year = month === 0 ? year + 1 : year;
         firstDayOfWeek = getFirstDayOfMonth(year, month);
@@ -132,7 +142,7 @@
 
     const handlePrevClick = () => {
         if (month <= currentDate.getMonth() && year <= currentDate.getFullYear()) return;
-        updateSelectedDates();
+        updateselectedDates();
         month = month === 0 ? 11 : month - 1;
         year = month === 11 ? year - 1 : year;
         firstDayOfWeek = getFirstDayOfMonth(year, month);
@@ -175,12 +185,12 @@
         }
     }
 
-    const updateSelectedDates = () => {
+    const updateselectedDates = () => {
         dates.filter(date => date.isSelected).forEach(date => {
             const selectedMonth = date.isPrevMonth ? month === 0 ? 11 : month - 1 : date.isNextMonth ? month === 11 ? 0 : month + 1 : month;
-            selectedDate = new Date(year, selectedMonth, date.date);
+            selectedDate.set(new Date(year, selectedMonth, date.date));
         });
-        console.log(selectedDate);
+        console.log($selectedDate);
     }
 
     onMount(() => {

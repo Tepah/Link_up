@@ -3,9 +3,16 @@
 
     let name = '';
     let description = '';
+    let nameMissingError = false;
 
     const createCookie = () => {
-      console.log(name, description)
+        if (name === '') {
+            nameMissingError = true;
+            setTimeout(() => {
+                nameMissingError = false;
+            }, 3000);
+            return;
+        }
         Cookies.set('planName', name, { expires: 1 });
         Cookies.set('planDescription', description, { expires: 1 });
         let token = Cookies.get('planName')
@@ -38,10 +45,28 @@
     <div class="flex flex-row justify-evenly">
         <button class="bg-primary py-2 px-10 rounded-lg text-lg" type="submit" on:click={createCookie}>Submit</button>
     </div>
+    {#if nameMissingError}
+        <p class="nameMissingError text-red-500">Please enter a name for your plan</p>
+    {/if}
 </div>
 
 <style>
     #name:focus, #description:focus {
         outline: none;
+    }
+    .nameMissingError {
+        animation: fadeOut 3s ease forwards;
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+        }
+        75% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
     }
 </style>
