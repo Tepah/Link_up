@@ -104,12 +104,12 @@
                     {#if data.incomplete.length !== 0}
                         <div class="flex flex-col my-3">
                             {#each data.incomplete.slice(0, 2) as plan}
-                                <div class="planItem flex flex-row justify-between h-20 w-72 py-3 pl-3 pr-4 my-1.5 bg-secondary bg-opacity-20 rounded-xl">
+                                <a href="/confirm/420/" class="planItem flex flex-row justify-between h-20 w-72 py-3 pl-3 pr-4 my-1.5 bg-secondary bg-opacity-20 rounded-xl">
                                     <div class="flex flex-col items-start pl-1 pr-7">
                                         <p class="text-lg font-semibold">{plan.title}</p>
                                         <p class=""><span class="text-accent">{plan.schedules.length}</span> schedules</p>
                                     </div>
-                                </div>
+                                </a>
                             {/each}
                             {#if data.incomplete.length > 2}
                                 <button class="flex flex-row items-center justify-center text-lg font-bold" on:click={toggleUndecided}>...</button>

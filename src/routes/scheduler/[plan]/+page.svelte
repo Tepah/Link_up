@@ -1,7 +1,4 @@
 <script>
-    const handleSubmit = () => {
-
-    };
 </script>
 
 <div class="flex flex-row justify-evenly">
