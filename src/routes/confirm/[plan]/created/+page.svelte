@@ -45,7 +45,7 @@
     </div>
     <div class="flex flex-col space-y-6 justify-evenly items-center">
         <button on:click={() => {}} class="bg-accent py-2 px-10 rounded text-lg">View plan details</button>
-        <button on:click={() => {}} class="bg-primary py-2 px-10 rounded text-lg">Go home</button>
+        <a href="../../main" class="bg-primary py-2 px-10 rounded text-lg">Go home</a>
     </div>
 </div>
 

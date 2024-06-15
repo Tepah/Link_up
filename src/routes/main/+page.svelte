@@ -2,6 +2,8 @@
     import titleLogo from "$lib/images/main_title.png";
     import settingsIcon from "$lib/images/icons8-lines.svg";
     import Settings from "$lib/components/Settings.svelte";
+    import { sharedData } from '$lib/stores.js';
+    import { goto } from '$app/navigation';
     export let data;
 
 
@@ -12,12 +14,18 @@
     const toggleUpcoming = () => {
       showAllUpcoming = !showAllUpcoming;
     }
+
     const toggleUndecided = () => {
       showAllIncomplete = !showAllIncomplete;
     }
 
     const toggleSettings = () => {
         settingsOpen = !settingsOpen;
+    }
+
+    const handleScheduleClick = (plan) => {
+      sharedData.set(plan);
+      goto('/');
     }
 </script>
 
@@ -56,7 +64,7 @@
                 {:else if !showAllUpcoming}
                     <div class="flex flex-col my-3">
                         {#each data.upcoming.slice(0, 3) as plan}
-                            <div class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
+                            <a href="plan/{plan.id}" class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
                                 <div class="flex flex-col items-start pl-1 pr-7">
                                     <p class="text-lg font-semibold">{plan.title}</p>
                                     <p class="">{plan.attending.length} going</p>
@@ -64,7 +72,7 @@
                                 <div class="flex p-2 items-start">
                                     <p class="text-lg">{plan.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
                                 </div>
-                            </div>
+                            </a>
                         {/each}
                         {#if data.upcoming.length > 3}
                             <button on:click={toggleUpcoming} class="text-lg font-bold flex flex-row items-center justify-center">...</button>
@@ -73,7 +81,7 @@
                 {:else}
                     <div class="flex flex-col my-3 h-96">
                         {#each data.upcoming as plan}
-                            <div class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
+                            <a href="plan/{plan.id}" class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
                                 <div class="flex flex-col items-start pl-1 pr-7">
                                     <p class="text-lg font-semibold">{plan.title}</p>
                                     <p class="">{plan.attending.length} going</p>
@@ -81,7 +89,7 @@
                                 <div class="flex p-2 items-start">
                                     <p class="text-lg">{plan.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
                                 </div>
-                            </div>
+                            </a>
                         {/each}
                         <button on:click={toggleUpcoming} class="text-lg font-bold flex flex-row items-center justify-center"></button>
                     </div>

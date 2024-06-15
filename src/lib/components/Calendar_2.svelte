@@ -179,8 +179,7 @@
         if (nextMonth) {
             if (availableDates) return availableDates.find(d => d.getTime() ===
                         new Date(year, month + 1, date.getDate()).getTime()) === undefined;
-        } else
-        {
+        } else {
             if (availableDates) return availableDates.find(d => d.getTime() === date.getTime()) === undefined;
         }
     }
