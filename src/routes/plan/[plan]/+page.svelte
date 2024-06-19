@@ -1,15 +1,24 @@
-<script>
-  export let data;
+<script lang="ts">
+  import { onMount } from 'svelte';
+
+  let plan: Plan;
+  onMount(() => {
+    plan = JSON.parse(String(sessionStorage.getItem('plan')));
+    console.log(plan);
+  });
 </script>
 
 <div>
-    <h1>{data.plan.date}</h1>
-    <p>{data.plan.description}</p>
-    <p>{data.plan.date}</p>
-    <p>{data.plan.id}</p>
-    <div>
-        {#each data.plan.attending as attendee}
+    {#if plan}
+        <h1>{plan.title}</h1>
+        {#if plan.description}
+            <p>{plan.description}</p>
+        {/if}
+        <p>{plan.date}</p>
+        {#each plan.attending as attendee}
             <p>{attendee}</p>
         {/each}
-    </div>
+    {:else}
+        <h1>Plan not found</h1>
+    {/if}
 </div>

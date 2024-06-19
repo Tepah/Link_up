@@ -10,7 +10,7 @@
     let planDate = new Date();
 
     onMount(() => {
-        planDate = new Date(sessionStorage.getItem('selectedDate'));
+        planDate = new Date(String(sessionStorage.getItem('selectedDate')));
         sessionStorage.removeItem('selectedDate');
     });
 
