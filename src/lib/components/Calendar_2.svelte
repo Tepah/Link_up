@@ -2,7 +2,7 @@
     export let availableDates: Date[];
 
     import {onMount} from "svelte";
-    import { selectedDate } from "./store.js";
+    import { selectedDate } from "../stores.js";
 
     const MONTHS = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -189,7 +189,6 @@
             const selectedMonth = date.isPrevMonth ? month === 0 ? 11 : month - 1 : date.isNextMonth ? month === 11 ? 0 : month + 1 : month;
             selectedDate.set(new Date(year, selectedMonth, date.date));
         });
-        console.log($selectedDate);
     }
 
     onMount(() => {

@@ -1,15 +1,18 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import Cookies from 'js-cookie';
 
     const planName = Cookies.get('planName');
     const planDescription = Cookies.get('planDescription');
-    // Temporary Plan Date, but get it with
-    // const planDate = Cookies.get('planDate')
-    let planDateCookie = 'Thu Feb 01 2024 00:00:00 GMT-0800 (Pacific Standard Time)';
-    const planDate = new Date(planDateCookie);
     const dateFormat = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
 
     let copiedToClipboard = false;
+    let planDate = new Date();
+
+    onMount(() => {
+        planDate = new Date(sessionStorage.getItem('selectedDate'));
+        sessionStorage.removeItem('selectedDate');
+    });
 
     const copyToClipboard = async () => {
       const textToCopy: string | null | undefined = document.querySelector('.schedule_link')?.textContent;

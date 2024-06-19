@@ -1,11 +1,14 @@
 <script lang="ts">
     import Calendar from '$lib/components/Calendar_2.svelte';
-    import { selectedDate } from '$lib/components/store.js';
+    import { selectedDate } from '$lib/stores.js';
     export let data;
+
+    const originalDate = $selectedDate;
 
     let availableDates: Date[] = [];
     let copiedToClipboard: boolean = false;
     let noSelectedDate: boolean = false;
+
 
     const findCommonDates = () => {
         let firstArray = data.plan.schedules[0].available.map(date => new Date(date));
@@ -31,14 +34,14 @@
     }
 
     const handleScheduleClick = () => {
-        console.log($selectedDate);
-        if (!selectedDate) {
+        if ($selectedDate === originalDate) {
             noSelectedDate = true;
             setTimeout(() => {
                 noSelectedDate = false;
             }, 3000);
             return;
         }
+        sessionStorage.setItem('selectedDate', $selectedDate.toString());
         window.location.href = '/confirm/420/created'
     }
 

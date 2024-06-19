@@ -24,8 +24,8 @@
     }
 
     const handleScheduleClick = (plan) => {
-      sharedData.set(plan);
-      goto('/');
+      sessionStorage.setItem('plan', JSON.stringify(plan));
+      goto('/plan/{plan.id}');
     }
 </script>
 
@@ -64,7 +64,7 @@
                 {:else if !showAllUpcoming}
                     <div class="flex flex-col my-3">
                         {#each data.upcoming.slice(0, 3) as plan}
-                            <a href="plan/{plan.id}" class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
+                            <button on:click={handleScheduleClick(plan)} class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
                                 <div class="flex flex-col items-start pl-1 pr-7">
                                     <p class="text-lg font-semibold">{plan.title}</p>
                                     <p class="">{plan.attending.length} going</p>
@@ -72,7 +72,7 @@
                                 <div class="flex p-2 items-start">
                                     <p class="text-lg">{plan.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
                                 </div>
-                            </a>
+                            </button>
                         {/each}
                         {#if data.upcoming.length > 3}
                             <button on:click={toggleUpcoming} class="text-lg font-bold flex flex-row items-center justify-center">...</button>
