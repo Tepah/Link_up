@@ -6,7 +6,7 @@ export const upcomingPlans = [
     description: 'Dinner with friends at a fancy restaurant',
     date: '2023-01-20',
     attending: [
-      'John', 'Michael', 'Sarah'
+      'John', 'Michael', 'Sarah', 'tom', 'someone', 'pete'
     ]
   },
   {

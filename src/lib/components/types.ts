@@ -6,3 +6,10 @@ type Plan = {
   // Create attending into IDs of users
   attending: [String],
 };
+
+type User = {
+    id: String,
+    name: String,
+    email: String,
+    plans: [String],
+};

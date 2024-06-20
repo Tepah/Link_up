@@ -2,7 +2,6 @@
     import titleLogo from "$lib/images/main_title.png";
     import settingsIcon from "$lib/images/icons8-lines.svg";
     import Settings from "$lib/components/Settings.svelte";
-    import { sharedData } from '$lib/stores.js';
     import { goto } from '$app/navigation';
     export let data;
 
@@ -10,6 +9,7 @@
     let showAllUpcoming = false;
     let showAllIncomplete = false;
     let settingsOpen = false;
+    let user = {name: "Pete"}
 
     const toggleUpcoming = () => {
       showAllUpcoming = !showAllUpcoming;
@@ -42,7 +42,7 @@
                     <img src="{titleLogo}" alt="title logo">
                 </div>
                 <div class="p-1">
-                    <p>Hi, <span class="text-accent"> name</span>!</p>
+                    <p>Hi, <span class="text-accent"> {user.name}</span>!</p>
                 </div>
             </div>
             {#if !showAllIncomplete}
