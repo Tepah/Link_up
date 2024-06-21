@@ -5,7 +5,7 @@ type Plan = {
     date: String,
     // Create attending into IDs of users
     attending: [String],
-    Host: String,
+    host: String,
 };
 
 type User = {
