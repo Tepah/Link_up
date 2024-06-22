@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { IncompletePlan } from '../models/IncompletePlan';
+import {Schedule} from "../models/Schedule";
 
 /**
  * Retrieves Incomplete plans from the database.
@@ -38,7 +39,8 @@ export const getIncompletePlansById = async (req: Request, res: Response) => {
 }
 
 /**
- * Retrieves all Incomplete plans for the current user.
+ * Retrieves all Incomplete plans for the current user by first getting all the user's schedules
+ * and then finding all incomplete plans that have those schedule IDs in the schedules array.
  *
  * @async
  * @function getIncompletePlansByUser
@@ -48,8 +50,14 @@ export const getIncompletePlansById = async (req: Request, res: Response) => {
  */
 export const getIncompletePlansByUser = async (req: Request, res: Response) => {
     try {
-        const incompletePlans = await IncompletePlan.find({ attending: req.params.id });
-        res.json(incompletePlans);
+        const getAllUserSchedules = await Schedule.find({ userID: req.params.id });
+
+        const incompletePlansPromises = getAllUserSchedules.map(async (schedule) => {
+            return IncompletePlan.find({ schedules: schedule._id });
+        })
+
+        const incompletePlans = await Promise.all(incompletePlansPromises);
+        res.json(incompletePlans.flat());
     } catch (error) {
         res.status(500).send(error);
     }

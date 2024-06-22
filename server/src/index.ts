@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import planRoutes from './routes/planRoutes';
 import unconfirmedPlanRoutes from "./routes/incompletePlanRoutes";
+import scheduleRoutes from "./routes/scheduleRoutes";
 
 require("dotenv").config();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(userRoutes);
 app.use(planRoutes);
 app.use(unconfirmedPlanRoutes);
+app.use(scheduleRoutes);
 
 app.listen(PORT, () => {
     console.log('Server is running on http://localhost:3000')
