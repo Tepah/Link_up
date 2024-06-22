@@ -1,4 +1,3 @@
-
 type Plan = {
     title: String,
     description?: String,

@@ -70,7 +70,7 @@
                                     <p class="">{plan.attending.length} going</p>
                                 </div>
                                 <div class="flex p-2 items-start">
-                                    <p class="text-lg">{plan.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                                    <p class="text-lg">{new Date(plan.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
                                 </div>
                             </button>
                         {/each}
