@@ -7,7 +7,7 @@
 	"/confirm/[plan]/schedules": [],
 	"/create": [],
 	"/main": [
-		"src/routes/main/+page.server.js"
+		"src/routes/main/+page.server.ts"
 	],
 	"/plan/[plan]": [
 		"src/routes/plan/[plan]/+page.server.js"

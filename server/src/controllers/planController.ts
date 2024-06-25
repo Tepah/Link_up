@@ -31,7 +31,6 @@ export const getPlansByUserID = async ( req: Request, res: Response) => {
 export const getPlansByHostID = async ( req: Request, res: Response) => {
     try {
         const plans = await Plan.find({ host: req.params.id })
-        console.log(plans);
         res.json(plans);
     } catch (error) {
         res.status(500).json(error);

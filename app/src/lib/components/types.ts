@@ -1,15 +1,29 @@
 type Plan = {
+    _id: String,
     title: String,
     description?: String,
     date: String,
-    // Create attending into IDs of users
     attending: [String],
     host: String,
 };
 
+type Incomplete = {
+    _id: String,
+    title: String,
+    description?: String,
+    schedules: [String],
+    host: String,
+};
+
 type User = {
-    id: String,
+    _id: String,
     name: String,
     email: String,
-    plans: [String],
+};
+
+type Schedule = {
+    _id: String,
+    userID: String,
+    name: String,
+    dates: Date
 };
