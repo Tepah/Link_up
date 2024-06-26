@@ -99,7 +99,7 @@
             {#if !showAllUpcoming || data.incomplete.length < 0}
             <div class="flex-shrink flex flex-col p-1.5">
                 <div class="flex flex-row">
-                    <p class="text-start text-lg">Undecided Plans</p>
+                    <p class="text-start text-lg">Pending Plans</p>
                     {#if data.incomplete.length > 2}
                         <button class="font-bold flex items-center justify-center p-1" class:show-list={showAllIncomplete} class:hide-list={!showAllIncomplete} on:click={toggleUndecided}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

@@ -1,8 +1,5 @@
 <script lang="ts">
   import Calendar from "$lib/components/Calendar_1.svelte";
-
-  let selectedDates: Date[] = [];
-
 </script>
 
 
@@ -16,7 +13,7 @@
     </div>
     <div class="flex flex-col">
         <p class="text-lg pb-6 pt-20 md:pt-0">Choose your availability:</p>
-        <Calendar selectedDates={selectedDates} />
+        <Calendar />
     </div>
     <slot />
 </div>

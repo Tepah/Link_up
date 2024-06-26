@@ -1,6 +1,10 @@
 <script lang="ts">
-    export let selectedDates: (Date | null | undefined)[] = [];
     import {onMount} from "svelte";
+    import {availableDates} from "$lib/stores.js";
+
+    let selectedDates: (Date | null | undefined)[] = [];
+
+    $: $availableDates = selectedDates;
 
     const MONTHS = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -83,6 +87,7 @@
         isDragging = false;
         startIdx = null;
         endIdx = null;
+        updateSelectedDates();
     };
 
     const highlightHover = () => {
@@ -118,7 +123,6 @@
     };
 
     const handleNextClick = () => {
-        updateSelectedDates();
         month = month === 11 ? 0 : month + 1;
         year = month === 0 ? year + 1 : year;
         firstDayOfWeek = getFirstDayOfMonth(year, month);
@@ -153,7 +157,6 @@
 
     const handlePrevClick = () => {
         if (month <= currentDate.getMonth() && year <= currentDate.getFullYear()) return;
-        updateSelectedDates();
         month = month === 0 ? 11 : month - 1;
         year = month === 11 ? year - 1 : year;
         firstDayOfWeek = getFirstDayOfMonth(year, month);
@@ -203,8 +206,12 @@
                 selectedDates.push(selectedDate);
             }
         });
+        dates.filter(date => !date.isSelected).forEach(date => {
+            const selectedMonth = date.isPrevMonth ? month === 0 ? 11 : month - 1 : date.isNextMonth ? month === 11 ? 0 : month + 1 : month;
+            const selectedDate = new Date(year, selectedMonth, date.date);
+            selectedDates = selectedDates.filter(d => d.getTime() !== selectedDate.getTime());
+        });
         sortDates();
-        console.log(selectedDates);
     }
 
     $: sortDates = () => {
