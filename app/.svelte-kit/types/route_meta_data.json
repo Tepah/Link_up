@@ -1,0 +1,18 @@
+{
+	"/": [],
+	"/confirm/[plan]": [
+		"src/routes/confirm/[plan]/+page.server.ts"
+	],
+	"/confirm/[plan]/created": [],
+	"/confirm/[plan]/schedules": [],
+	"/create": [],
+	"/main": [
+		"src/routes/main/+page.server.ts"
+	],
+	"/plan/[plan]": [
+		"src/routes/plan/[plan]/+page.server.ts"
+	],
+	"/scheduler": [],
+	"/scheduler/[plan]": [],
+	"/share/[plan]": []
+}
