@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import titleLogo from "$lib/images/main_title.png";
     import settingsIcon from "$lib/images/icons8-lines.svg";
     import Settings from "$lib/components/Settings.svelte";
@@ -23,7 +23,7 @@
         settingsOpen = !settingsOpen;
     }
 
-    const handleScheduleClick = (plan) => {
+    const handleScheduleClick = (plan: Plan) => {
       sessionStorage.setItem('plan', JSON.stringify(plan));
       goto('/plan/{plan.id}');
     }

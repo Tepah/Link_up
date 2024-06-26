@@ -1,7 +1,7 @@
 {
 	"/": [],
 	"/confirm/[plan]": [
-		"src/routes/confirm/[plan]/+page.server.js"
+		"src/routes/confirm/[plan]/+page.server.ts"
 	],
 	"/confirm/[plan]/created": [],
 	"/confirm/[plan]/schedules": [],
@@ -10,7 +10,7 @@
 		"src/routes/main/+page.server.ts"
 	],
 	"/plan/[plan]": [
-		"src/routes/plan/[plan]/+page.server.js"
+		"src/routes/plan/[plan]/+page.server.ts"
 	],
 	"/scheduler": [],
 	"/scheduler/[plan]": [],
