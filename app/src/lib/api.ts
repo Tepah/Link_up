@@ -2,6 +2,30 @@ import { availableDates } from "$lib/stores.js";
 import type { Writable} from 'svelte/store';
 import { get } from 'svelte/store';
 
+export const getAllSchedules = async (url: String = '', schedules: String[]) => {
+    const allSchedules = [];
+
+    for (const id of schedules) {
+        const schedule: Schedule = await getSchedule(url, id);
+        allSchedules.push(schedule);
+    }
+    console.log(allSchedules);
+    return allSchedules
+}
+
+export const getSchedule = async (url: String = '', scheduleID: String = '') => {
+    try {
+        const response = await fetch(url + '/schedules/' + scheduleID);
+        const result = await response.json();
+        console.log("getSchedule result: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error getting schedule: ", error);
+        return {};
+    }
+
+}
+
 export const postIncompletePlan = async (url: String = '',
                                          userId: String = '',
                                          planName: String = '',
@@ -40,7 +64,7 @@ export const postSchedule = async (url: String = '',
             body: JSON.stringify({
                 userID: userID,
                 name: name,
-                schedules: get(availableDates)
+                dates: get(availableDates)
             })
         });
         const result: Schedule = await response.json();

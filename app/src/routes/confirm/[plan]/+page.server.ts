@@ -1,7 +1,6 @@
-import { incompletePlan } from "$lib/data.js";
+import {getAllSchedules} from "../../../lib/api";
 
 export function load() {
   return {
-    plan: incompletePlan[0],
   }
 }
