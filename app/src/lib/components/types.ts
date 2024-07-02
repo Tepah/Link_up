@@ -1,8 +1,8 @@
 type Plan = {
-    _id: String,
+    _id?: String,
     title: String,
     description?: String,
-    date: String,
+    date: Date,
     attending: [String],
     host: String,
 };

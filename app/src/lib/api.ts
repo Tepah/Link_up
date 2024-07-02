@@ -13,6 +13,29 @@ export const getAllSchedules = async (url: String = '', schedules: String[]) => 
     return allSchedules
 }
 
+export const getAllIDsOnSchedules = async (url: String = '', schedules: String[]) => {
+    const allNames = [];
+
+    for (const id of schedules) {
+        const name = await getIDOnSchedule(url, id);
+        allNames.push(name);
+    }
+    console.log(allNames);
+    return allNames;
+}
+
+export const getIDOnSchedule = async (url: String = '', scheduleID: String) => {
+    try {
+        const response = await fetch(url + '/schedules/' + scheduleID);
+        const result: Schedule = await response.json();
+        console.log("getNamesOnSchedule result: ", result);
+        return result.userID;
+    } catch (error) {
+        console.error("Error getting names on schedule: ", error);
+        return [];
+    }
+}
+
 export const getSchedule = async (url: String = '', scheduleID: String = '') => {
     try {
         const response = await fetch(url + '/schedules/' + scheduleID);
@@ -24,6 +47,22 @@ export const getSchedule = async (url: String = '', scheduleID: String = '') => 
         return {};
     }
 
+}
+
+export const postPlan = async (url: String = '', plan: Plan) => {
+    try {
+        const response = await fetch(url + '/plans', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(plan)
+        });
+        const result = response.json();
+        console.log("Plan posted. postPlan result: ", result);
+    } catch (error) {
+        console.error("Error posting plan: ", error);
+    }
 }
 
 export const postIncompletePlan = async (url: String = '',

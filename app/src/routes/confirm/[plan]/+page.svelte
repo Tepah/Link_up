@@ -1,11 +1,12 @@
 <script lang="ts">
     import Calendar from '$lib/components/Calendar_2.svelte';
     import {selectedDate} from '$lib/stores.js';
-    import {getAllSchedules} from "$lib/api";
+    import {getAllIDsOnSchedules, getAllSchedules, postPlan} from "$lib/api";
     import {onMount} from "svelte";
 
-    const incompletePlan = JSON.parse(String(sessionStorage.getItem('incomplete')));
+    const incompletePlan: Incomplete = JSON.parse(String(sessionStorage.getItem('incomplete')));
     const originalDate = $selectedDate;
+    const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
     let availableDates: Date[];
     let copiedToClipboard: boolean = false;
@@ -21,7 +22,7 @@
         }, 3000);
     }
 
-    const handleScheduleClick = () => {
+    const handleScheduleClick = async () => {
         if ($selectedDate === originalDate) {
             noSelectedDate = true;
             setTimeout(() => {
@@ -30,11 +31,23 @@
             return;
         }
         sessionStorage.setItem('selectedDate', $selectedDate.toString());
+        const attending: [String] = await getAllIDsOnSchedules(url, incompletePlan.schedules);
+
+        let plan = {
+            title: incompletePlan.title,
+            description: incompletePlan.description,
+            date: $selectedDate,
+            attending: attending,
+            host: incompletePlan.host,
+        }
+
+        await postPlan(url, plan);
+        sessionStorage.removeItem('incomplete');
+        sessionStorage.setItem('plan', JSON.stringify(plan));
         window.location.href = '/confirm/420/created'
     }
 
     onMount(async () => {
-        const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
         const incompletePlan = JSON.parse(String(sessionStorage.getItem('incomplete')));
         const allSchedules = await getAllSchedules(url, incompletePlan.schedules);
         const availableDatesStrings = allSchedules.map(schedule => schedule.dates).flat();
@@ -67,7 +80,7 @@
     <div class="flex flex-col pt-5 space-y-2 items-center">
         <p class="text-lg">Share link for more availability</p>
         <button class="schedule_link shadow shadow-accent py-1 px-4 rounded" on:click={copyToClipboard}>
-            linkup.w/me/scheduler/420
+            linkup.w/scheduler/{incompletePlan._id}
         </button>
         {#if copiedToClipboard}
             <p class="copied-text text-accent">Copied to clipboard!</p>
