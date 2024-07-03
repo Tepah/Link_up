@@ -1,7 +1,7 @@
 <script lang="ts">
     import Calendar from '$lib/components/Calendar_2.svelte';
     import {selectedDate} from '$lib/stores.js';
-    import {getAllIDsOnSchedules, getAllSchedules, postPlan} from "$lib/api";
+    import {deleteIncompletePlan, getAllIDsOnSchedules, getAllSchedules, postPlan} from "$lib/api";
     import {onMount} from "svelte";
 
     const incompletePlan: Incomplete = JSON.parse(String(sessionStorage.getItem('incomplete')));
@@ -41,9 +41,10 @@
             host: incompletePlan.host,
         }
 
-        await postPlan(url, plan);
+        const returnPlan = await postPlan(url, plan);
+        await deleteIncompletePlan(url, incompletePlan._id);
         sessionStorage.removeItem('incomplete');
-        sessionStorage.setItem('plan', JSON.stringify(plan));
+        sessionStorage.setItem('plan', JSON.stringify(returnPlan));
         window.location.href = '/confirm/420/created'
     }
 

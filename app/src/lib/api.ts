@@ -2,6 +2,19 @@ import { availableDates } from "$lib/stores.js";
 import type { Writable} from 'svelte/store';
 import { get } from 'svelte/store';
 
+// GET requests
+export const getIncompletePlan = async (url: String = '', planID: String = '') => {
+    try {
+        const response = await fetch(url + '/incomplete/' + planID);
+        const result = await response.json();
+        console.log("getIncompletePlan result: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error getting incomplete plan: ", error);
+        return {};
+    }
+}
+
 export const getAllSchedules = async (url: String = '', schedules: String[]) => {
     const allSchedules = [];
 
@@ -49,6 +62,7 @@ export const getSchedule = async (url: String = '', scheduleID: String = '') => 
 
 }
 
+// POST requests
 export const postPlan = async (url: String = '', plan: Plan) => {
     try {
         const response = await fetch(url + '/plans', {
@@ -58,8 +72,9 @@ export const postPlan = async (url: String = '', plan: Plan) => {
             },
             body: JSON.stringify(plan)
         });
-        const result = response.json();
+        const result: Plan = await response.json();
         console.log("Plan posted. postPlan result: ", result);
+        return result;
     } catch (error) {
         console.error("Error posting plan: ", error);
     }
@@ -112,5 +127,34 @@ export const postSchedule = async (url: String = '',
     } catch (error) {
         console.error("Error posting schedule: ", error);
         return "";
+    }
+}
+
+// DELETE requests
+export const deleteSchedule = async (url: String = '', scheduleID: String = '') => {
+    try {
+        const response = await fetch(url + '/schedules/' + scheduleID, {
+            method: 'DELETE'
+        });
+        const result = await response.json();
+        console.log("Schedule deleted. deleteSchedule result: ", result);
+    } catch (error) {
+        console.error("Error deleting schedule: ", error);
+    }
+}
+
+export const deleteIncompletePlan = async (url: String = '', planID: String = '') => {
+    const incompletePlan = await getIncompletePlan(url, planID);
+    for (const scheduleID of incompletePlan.schedules) {
+        await deleteSchedule(url, scheduleID);
+    }
+    try {
+        const response = await fetch(url + '/incomplete/' + planID, {
+            method: 'DELETE'
+        });
+        const result = await response.json();
+        console.log("Incomplete plan deleted. deleteIncompletePlan result: ", result);
+    } catch (error) {
+        console.error("Error deleting incomplete plan: ", error);
     }
 }
