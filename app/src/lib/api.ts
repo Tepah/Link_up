@@ -3,6 +3,18 @@ import type { Writable} from 'svelte/store';
 import { get } from 'svelte/store';
 
 // GET requests
+export const getUserByID = async (url: String = '', uid: String) => {
+    try {
+        const response = await fetch(url + '/users/' + uid);
+        const result = await response.json();
+        console.log("getUserByID result: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error getting user: ", error);
+        return [];
+    }
+}
+
 export const getIncompletePlan = async (url: String = '', planID: String = '') => {
     try {
         const response = await fetch(url + '/incomplete/' + planID);
@@ -131,6 +143,18 @@ export const postSchedule = async (url: String = '',
 }
 
 // DELETE requests
+export const deletePlan = async (url: String = '', planID: String = '') => {
+    try {
+        const response = await fetch(url + '/plans/' + planID, {
+            method: 'DELETE'
+        });
+        const result = await response.json();
+        console.log("Plan deleted. deletePlan result: ", result);
+    } catch (error) {
+        console.error("Error deleting plan: ", error);
+    }
+}
+
 export const deleteSchedule = async (url: String = '', scheduleID: String = '') => {
     try {
         const response = await fetch(url + '/schedules/' + scheduleID, {

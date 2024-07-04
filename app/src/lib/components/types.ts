@@ -17,6 +17,7 @@ type Incomplete = {
 
 type User = {
     _id: String,
+    username: String,
     name: String,
     email: String,
 };
