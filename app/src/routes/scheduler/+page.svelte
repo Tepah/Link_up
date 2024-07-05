@@ -16,12 +16,16 @@
         }
         // This is where the selected dates are sent to the server
         const scheduleId = await postSchedule(url, userID, name, availableDates);
-        await postIncompletePlan(url,
+        const incompletePlanID = await postIncompletePlan(url,
             userID,
             sessionStorage.getItem('planName'),
             sessionStorage.getItem('planDescription'),
             [scheduleId]);
-        console.log($availableDates, sessionStorage.getItem('planName'), sessionStorage.getItem('planDescription'));
+
+        sessionStorage.removeItem('planName');
+        sessionStorage.removeItem('planDescription');
+        sessionStorage.setItem('incompletePlanID', incompletePlanID);
+        window.location.href = `/share/${incompletePlanID}`;
     }
 </script>
 

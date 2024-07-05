@@ -110,8 +110,9 @@ export const postIncompletePlan = async (url: String = '',
                 host: userId
             })
         });
-        const result = await response.json();
+        const result: Incomplete = await response.json();
         console.log(result);
+        return result._id;
     } catch (error) {
         console.error("Error posting incomplete plan: ", error);
     }
