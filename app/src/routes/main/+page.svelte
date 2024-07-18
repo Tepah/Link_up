@@ -3,14 +3,17 @@
     import settingsIcon from "$lib/images/icons8-lines.svg";
     import Settings from "$lib/components/Settings.svelte";
     import {goto} from '$app/navigation';
+    import {onMount} from "svelte";
+    import {getAllIncompleteByID, getAllPlansByID} from "$lib/api";
 
-    export let data;
-
+    const userID = "6673b2f5e514d10c958207fd"
+    const url = "http://localhost:3000"
 
     let showAllUpcoming = false;
     let showAllIncomplete = false;
     let settingsOpen = false;
     let user = {name: "Pete"}
+    let plans: {upcoming: Plan[], incomplete: Incomplete[]} = {upcoming: [], incomplete: []};
 
     const toggleUpcoming = () => {
         showAllUpcoming = !showAllUpcoming;
@@ -33,6 +36,24 @@
         sessionStorage.setItem('incomplete', JSON.stringify(incompletePlan));
         goto('/confirm/' + incompletePlan._id);
     }
+
+    const getPlans = async () => {
+        let userPlans: Plan[] = await getAllPlansByID(url, userID);
+        userPlans.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        let incompletePlans = await getAllIncompleteByID(url, userID);
+        plans = {
+            upcoming: userPlans.filter(plan => new Date(plan.date) >= new Date()),
+            incomplete: incompletePlans
+        }
+    }
+
+    const archivePlan = (plan: Plan) => {
+        console.log('archiving plan', plan);
+    }
+
+    onMount(() => {
+        getPlans();
+    })
 </script>
 
 {#if !settingsOpen}
@@ -51,12 +72,12 @@
                     <p>Hi, <span class="text-accent"> {user.name}</span>!</p>
                 </div>
             </div>
-            {#if data.upcoming.length > 0 || data.incomplete.length > 0}
+            {#if plans.upcoming.length > 0 || plans.incomplete.length > 0}
                 {#if !showAllIncomplete}
                     <div class="flex-shrink flex flex-col p-1.5">
                         <div class="flex flex-row">
                             <p class="text-start text-lg">Upcoming Plans</p>
-                            {#if data.upcoming.length > 3}
+                            {#if plans.upcoming.length > 3}
                                 <button class="font-bold flex items-center justify-center p-1"
                                         class:show-list={showAllUpcoming} class:hide-list={!showAllUpcoming}
                                         on:click={toggleUpcoming}>
@@ -70,7 +91,7 @@
                         </div>
                         {#if !showAllUpcoming}
                             <div class="flex flex-col my-3">
-                                {#each data.upcoming.slice(0, 3) as plan}
+                                {#each plans.upcoming.slice(0, 3) as plan}
                                     <button on:click={() => handleScheduleClick(plan)}
                                             class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
                                         <div class="flex flex-col items-start pl-1 pr-7">
@@ -85,7 +106,7 @@
                                         </div>
                                     </button>
                                 {/each}
-                                {#if data.upcoming.length > 3}
+                                {#if plans.upcoming.length > 3}
                                     <button on:click={toggleUpcoming}
                                             class="text-lg font-bold flex flex-row items-center justify-center">...
                                     </button>
@@ -93,7 +114,7 @@
                             </div>
                         {:else}
                             <div class="flex flex-col my-3 h-96">
-                                {#each data.upcoming as plan}
+                                {#each plans.upcoming as plan}
                                     <button on:click={() => handleScheduleClick(plan)}
                                             class="planItem flex flex-row justify-between w-72 h-20 py-3 pl-3 pr-4 my-1.5 bg-primary bg-opacity-50 rounded-xl">
                                         <div class="flex flex-col items-start pl-1 pr-7">
@@ -114,11 +135,11 @@
                         {/if}
                     </div>
                 {/if}
-                {#if !showAllUpcoming || data.upcoming.length > 0}
+                {#if plans.incomplete.length > 0}
                     <div class="flex-shrink flex flex-col p-1.5">
                         <div class="flex flex-row">
                             <p class="text-start text-lg">Pending Plans</p>
-                            {#if data.incomplete.length > 2}
+                            {#if plans.incomplete.length > 2}
                                 <button class="font-bold flex items-center justify-center p-1"
                                         class:show-list={showAllIncomplete} class:hide-list={!showAllIncomplete}
                                         on:click={toggleUndecided}>
@@ -131,9 +152,9 @@
                             {/if}
                         </div>
                         {#if !showAllIncomplete}
-                            {#if data.incomplete.length > 0}
+                            {#if plans.incomplete.length > 0}
                                 <div class="flex flex-col my-3">
-                                    {#each data.incomplete.slice(0, 2) as plan}
+                                    {#each plans.incomplete.slice(0, 2) as plan}
                                         <button on:click={() => handleIncompleteClick(plan)}
                                                 class="planItem flex flex-row justify-between h-20 w-72 py-3 pl-3 pr-4 my-1.5 bg-secondary bg-opacity-20 rounded-xl">
                                             <div class="flex flex-col items-start pl-1 pr-7">
@@ -143,7 +164,7 @@
                                             </div>
                                         </button>
                                     {/each}
-                                    {#if data.incomplete.length > 2}
+                                    {#if plans.incomplete.length > 2}
                                         <button class="flex flex-row items-center justify-center text-lg font-bold"
                                                 on:click={toggleUndecided}>...
                                         </button>
@@ -152,7 +173,7 @@
                             {/if}
                         {:else}
                             <div class="flex flex-col my-3">
-                                {#each data.incomplete as plan}
+                                {#each plans.incomplete as plan}
                                     <button on:click={() => handleIncompleteClick(plan)}
                                             class="planItem flex flex-row justify-between h-20 w-72 py-3 pl-3 pr-4 my-1.5 bg-secondary bg-opacity-20 rounded-xl">
                                         <div class="flex flex-col items-start pl-1 pr-7">
@@ -166,7 +187,7 @@
                         {/if}
                     </div>
                 {/if}
-            {:else if data.upcoming.length === 0 && data.incomplete.length === 0}
+            {:else if plans.upcoming.length === 0 && plans.incomplete.length === 0}
                 <div class="my-3">
                     <p class="text-lg">Nothing yet... <br>Start making some plans!</p>
                 </div>

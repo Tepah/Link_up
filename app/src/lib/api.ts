@@ -15,6 +15,31 @@ export const getUserByID = async (url: String = '', uid: String) => {
     }
 }
 
+export const getAllPlansByID = async (url: String = '', userID: String = '') => {
+    try {
+        let response = await fetch(`http://localhost:3000/plans/user/${userID}`);
+        const userPlans: [Plan] = await response.json();
+        console.log("getPlansByID result: ", userPlans);
+        return userPlans;
+    } catch (error) {
+        console.error("Error getting plans by ID: ", error);
+        return [];
+    }
+}
+
+export const getAllIncompleteByID = async (url: String = '', userID: String = '') => {
+    try {
+        let response = await fetch(`/incomplete/user/${userID}`);
+        const userIncomplete: [Incomplete] = await response.json();
+        console.log("getIncompleteByID result: ", userIncomplete);
+        return userIncomplete;
+    } catch (error) {
+        console.error("Error getting incomplete by ID: ", error);
+        return [];
+    }
+
+}
+
 export const getIncompletePlan = async (url: String = '', planID: String = '') => {
     try {
         const response = await fetch(url + '/incomplete/' + planID);
