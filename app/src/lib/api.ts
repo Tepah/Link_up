@@ -17,7 +17,7 @@ export const getUserByID = async (url: String = '', uid: String) => {
 
 export const getAllPlansByID = async (url: String = '', userID: String = '') => {
     try {
-        let response = await fetch(`http://localhost:3000/plans/user/${userID}`);
+        let response = await fetch(url + `/plans/user/${userID}`);
         const userPlans: [Plan] = await response.json();
         console.log("getPlansByID result: ", userPlans);
         return userPlans;
@@ -29,7 +29,7 @@ export const getAllPlansByID = async (url: String = '', userID: String = '') => 
 
 export const getAllIncompleteByID = async (url: String = '', userID: String = '') => {
     try {
-        let response = await fetch(`/incomplete/user/${userID}`);
+        let response = await fetch(url + `/incomplete/user/${userID}`);
         const userIncomplete: [Incomplete] = await response.json();
         console.log("getIncompleteByID result: ", userIncomplete);
         return userIncomplete;

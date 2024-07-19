@@ -42,17 +42,23 @@
         userPlans.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         let incompletePlans = await getAllIncompleteByID(url, userID);
         plans = {
-            upcoming: userPlans.filter(plan => new Date(plan.date) >= new Date()),
+            upcoming: userPlans,
             incomplete: incompletePlans
         }
     }
 
     const archivePlan = (plan: Plan) => {
-        console.log('archiving plan', plan);
+
     }
 
     onMount(() => {
         getPlans();
+        for (let i = 0; i < plans.upcoming.length; i++) {
+            let plan = plans.upcoming[i];
+            if (new Date(plan.date).getTime() < new Date().getTime()) {
+                archivePlan(plan);
+            }
+        }
     })
 </script>
 

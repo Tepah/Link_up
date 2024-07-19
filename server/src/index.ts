@@ -5,6 +5,7 @@ import userRoutes from './routes/userRoutes';
 import planRoutes from './routes/planRoutes';
 import incompletePlanRoutes from "./routes/incompletePlanRoutes";
 import scheduleRoutes from "./routes/scheduleRoutes";
+import archiveRoutes from "./routes/archiveRoutes";
 
 require("dotenv").config();
 
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(userRoutes);
 app.use(planRoutes);
 app.use(incompletePlanRoutes);
+app.use(archiveRoutes);
 app.use(scheduleRoutes);
 
 app.listen(PORT, () => {
