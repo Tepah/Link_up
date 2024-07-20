@@ -143,6 +143,28 @@ export const postIncompletePlan = async (url: String = '',
     }
 }
 
+export const postArchive = async (url: String, plan: Plan) => {
+    try {
+        const response = await fetch(url + '/archives', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: plan.title,
+                description: plan.description,
+                date: new Date(),
+                attended: plan.attending,
+                host: plan.host
+            })
+        });
+        const result = await response.json();
+        console.log("Archive posted. postArchive result: ", result);
+    } catch (error) {
+        console.error("Error posting archive: ", error);
+    }
+}
+
 export const postSchedule = async (url: String = '',
                                    userID: String = '',
                                    name: String = '',

@@ -4,7 +4,7 @@
     import Settings from "$lib/components/Settings.svelte";
     import {goto} from '$app/navigation';
     import {onMount} from "svelte";
-    import {getAllIncompleteByID, getAllPlansByID} from "$lib/api";
+    import {deletePlan, getAllIncompleteByID, getAllPlansByID, postArchive} from "$lib/api";
 
     const userID = "6673b2f5e514d10c958207fd"
     const url = "http://localhost:3000"
@@ -12,6 +12,7 @@
     let showAllUpcoming = false;
     let showAllIncomplete = false;
     let settingsOpen = false;
+    let loading = true;
     let user = {name: "Pete"}
     let plans: {upcoming: Plan[], incomplete: Incomplete[]} = {upcoming: [], incomplete: []};
 
@@ -48,17 +49,21 @@
     }
 
     const archivePlan = (plan: Plan) => {
-
+        postArchive(url, plan);
+        deletePlan(url, plan._id);
+        console.log("Plan archived")
     }
 
-    onMount(() => {
-        getPlans();
+    onMount(async () => {
+        await getPlans();
         for (let i = 0; i < plans.upcoming.length; i++) {
             let plan = plans.upcoming[i];
             if (new Date(plan.date).getTime() < new Date().getTime()) {
                 archivePlan(plan);
+                plans.upcoming = plans.upcoming.filter(p => p._id !== plan._id);
             }
         }
+        loading = false;
     })
 </script>
 
