@@ -34,11 +34,11 @@
     </div>
     <h1 class="text-2xl font-bold pt-20 md:pt-0">Create a new plan</h1>
     <form class="flex flex-col space-y-4 text-left px-8">
-        <label class="text-lg" for="name">Name:</label>
+        <label class="text-lg" for="name">Title:</label>
         <input class="rounded-lg p-2 shadow shadow-accent" id="name" bind:value={name} type="text" placeholder="Plan name">
-
         <label class="text-lg" for="description">Description:</label>
-        <textarea class="rounded-lg p-2 shadow shadow-accent" style="resize:none;" rows="6" id="description" bind:value={description} placeholder="Describe what fun things you're planning!"></textarea>
+        <textarea class="rounded-lg p-2 shadow shadow-accent" style="resize:none;" rows="6" id="description"
+                  bind:value={description} placeholder="Describe what fun things you're planning!"></textarea>
     </form>
     <div class="flex flex-row justify-evenly">
         <button class="bg-primary py-2 px-10 rounded-lg text-lg" type="submit" on:click={handleSubmitPress}>Submit</button>

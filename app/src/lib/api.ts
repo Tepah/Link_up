@@ -153,7 +153,7 @@ export const postArchive = async (url: String, plan: Plan) => {
             body: JSON.stringify({
                 title: plan.title,
                 description: plan.description,
-                date: new Date(),
+                date: plan.date,
                 attended: plan.attending,
                 host: plan.host
             })
@@ -187,6 +187,23 @@ export const postSchedule = async (url: String = '',
     } catch (error) {
         console.error("Error posting schedule: ", error);
         return "";
+    }
+}
+
+// PUT requests
+export const updatePlan = async (url: String = '', plan: Plan) => {
+    try {
+        const response = await fetch(url + '/plans/' + plan._id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(plan)
+        });
+        const result = await response.json();
+        console.log("Plan updated. putPlan result: ", result);
+    } catch (error) {
+        console.error("Error updating plan: ", error);
     }
 }
 
