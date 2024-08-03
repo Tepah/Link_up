@@ -199,7 +199,7 @@
                     </div>
                 {/if}
             {:else if plans.upcoming.length === 0 && plans.incomplete.length === 0}
-                <div class="my-3">
+                <div class="my-44">
                     <p class="text-lg">Nothing yet... <br>Start making some plans!</p>
                 </div>
             {/if}

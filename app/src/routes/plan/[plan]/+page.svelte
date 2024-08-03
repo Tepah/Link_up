@@ -62,6 +62,7 @@
         loading = true;
         await updatePlan(url, plan);
         loading = false;
+        editMode = false;
     }
 </script>
 
