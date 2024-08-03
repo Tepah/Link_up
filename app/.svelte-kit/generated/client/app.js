@@ -24,7 +24,7 @@ export const dictionary = {
 		"/confirm/[plan]/created": [5],
 		"/confirm/[plan]/schedules": [6],
 		"/create": [7],
-		"/main": [~8],
+		"/main": [8],
 		"/plan/[plan]": [~9],
 		"/scheduler": [10,[2]],
 		"/scheduler/[plan]": [11,[2]],

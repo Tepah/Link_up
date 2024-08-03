@@ -3,7 +3,6 @@
 
     import {onMount} from "svelte";
     import { selectedDate } from "../stores.js";
-
     const MONTHS = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
         'September', 'October', 'November', 'December'
@@ -179,6 +178,9 @@
         if (nextMonth) {
             if (availableDates) return availableDates.find(d => d.getTime() ===
                         new Date(year, month + 1, date.getDate()).getTime()) === undefined;
+        } else if (prevMonth) {
+            if (availableDates) return availableDates.find(d => d.getTime() ===
+                        new Date(year, month - 1, date.getDate()).getTime()) === undefined;
         } else {
             if (availableDates) return availableDates.find(d => d.getTime() === date.getTime()) === undefined;
         }

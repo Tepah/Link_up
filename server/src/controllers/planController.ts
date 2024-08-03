@@ -47,12 +47,21 @@ export const createPlan = async (req: Request, res: Response) => {
     }
 }
 
-export const deletePlan = async (req: Request, res: Response) => {
+export const updatePlan = async (req: Request, res: Response) => {
     try {
-        const plan = await Plan.findByIdAndDelete(req.params.id);
+        const plan = await Plan.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!plan) {
             return res.status(404).send('Plan not found');
         }
+        res.json(plan);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+export const deletePlan = async (req: Request, res: Response) => {
+    try {
+        const plan = await Plan.findByIdAndDelete(req.params.id);
         res.json(plan);
     } catch (error) {
         res.status(500).json(error);

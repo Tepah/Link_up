@@ -6,9 +6,7 @@
 	"/confirm/[plan]/created": [],
 	"/confirm/[plan]/schedules": [],
 	"/create": [],
-	"/main": [
-		"src/routes/main/+page.server.ts"
-	],
+	"/main": [],
 	"/plan/[plan]": [
 		"src/routes/plan/[plan]/+page.server.ts"
 	],

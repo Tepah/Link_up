@@ -1,27 +1,16 @@
 <script lang="ts">
     import Calendar from '$lib/components/Calendar_2.svelte';
-    import { selectedDate } from '$lib/stores.js';
-    export let data;
+    import {selectedDate} from '$lib/stores.js';
+    import {deleteIncompletePlan, getAllIDsOnSchedules, getAllSchedules, postPlan} from "$lib/api";
+    import {onMount} from "svelte";
 
+    const incompletePlan: Incomplete = JSON.parse(String(sessionStorage.getItem('incomplete')));
     const originalDate = $selectedDate;
+    const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
-    let availableDates: Date[] = [];
+    let availableDates: Date[];
     let copiedToClipboard: boolean = false;
     let noSelectedDate: boolean = false;
-
-
-    const findCommonDates = () => {
-        let firstArray = data.plan.schedules[0].available.map(date => new Date(date));
-        const allSchedules = data.plan.schedules.map(schedule => schedule.available).map(schedule => schedule.map(date => new Date(date)));
-
-        return firstArray.filter(date1 =>
-            allSchedules.every(array =>
-                array.some(date2 =>
-                    date1.getTime() === date2.getTime()
-                )
-            )
-        );
-    };
 
     const copyToClipboard = async () => {
         const textToCopy: string | null | undefined = document.querySelector('.schedule_link')?.textContent;
@@ -33,7 +22,7 @@
         }, 3000);
     }
 
-    const handleScheduleClick = () => {
+    const handleScheduleClick = async () => {
         if ($selectedDate === originalDate) {
             noSelectedDate = true;
             setTimeout(() => {
@@ -42,10 +31,30 @@
             return;
         }
         sessionStorage.setItem('selectedDate', $selectedDate.toString());
+        const attending: [String] = await getAllIDsOnSchedules(url, incompletePlan.schedules);
+
+        let plan = {
+            title: incompletePlan.title,
+            description: incompletePlan.description,
+            date: $selectedDate,
+            attending: attending,
+            host: incompletePlan.host,
+        }
+
+        const returnPlan = await postPlan(url, plan);
+        await deleteIncompletePlan(url, incompletePlan._id);
+        sessionStorage.removeItem('incomplete');
+        sessionStorage.setItem('plan', JSON.stringify(returnPlan));
         window.location.href = '/confirm/420/created'
     }
 
-    availableDates = findCommonDates();
+    onMount(async () => {
+        const incompletePlan = JSON.parse(String(sessionStorage.getItem('incomplete')));
+        const allSchedules = await getAllSchedules(url, incompletePlan.schedules);
+        const availableDatesStrings = allSchedules.map(schedule => schedule.dates).flat();
+        availableDates = availableDatesStrings.map(date => new Date(date));
+        console.log(availableDates);
+    })
 </script>
 
 <div class="flex flex-col space-y-6 h-[100%] w-[100%]">
@@ -58,8 +67,10 @@
     </div>
     <div class="flex flex-col pt-20 md:pt-0">
         <p class="text-lg">Choose a time for the plan: </p>
-        <p>based on <span class="text-accent">{data.plan.schedules.length} schedules</span></p>
-        <Calendar availableDates={availableDates} />
+        <p>based on <span class="text-accent">{incompletePlan.schedules.length} schedules</span></p>
+        {#if availableDates}
+            <Calendar availableDates={availableDates} />
+        {/if}
     </div>
     <div class="flex flex-row justify-evenly">
         <button on:click={() => handleScheduleClick()} class="bg-primary py-2 px-10 rounded text-lg">Schedule</button>
@@ -70,7 +81,7 @@
     <div class="flex flex-col pt-5 space-y-2 items-center">
         <p class="text-lg">Share link for more availability</p>
         <button class="schedule_link shadow shadow-accent py-1 px-4 rounded" on:click={copyToClipboard}>
-            linkup.w/me/scheduler/420
+            linkup.w/scheduler/{incompletePlan._id}
         </button>
         {#if copiedToClipboard}
             <p class="copied-text text-accent">Copied to clipboard!</p>

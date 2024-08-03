@@ -1,7 +1,11 @@
 <script lang="ts">
-  let copiedToClipboard: boolean = false;
+    import {onMount} from "svelte";
 
-  const copyToClipboard = async () => {
+    let planID: String | null
+
+    let copiedToClipboard: boolean = false;
+
+    const copyToClipboard = async () => {
       const textToCopy: string | null | undefined = document.querySelector('.schedule_link')?.textContent;
       if (!textToCopy) return;
       await navigator.clipboard.writeText(textToCopy);
@@ -9,7 +13,11 @@
       setTimeout(() => {
           copiedToClipboard = false;
       }, 3000);
-  }
+    }
+
+    onMount(() => {
+        planID = sessionStorage.getItem('incompletePlanID');
+    })
 
 </script>
 
@@ -19,13 +27,13 @@
     <div class="flex flex-col pt-5 space-y-2 items-center">
         <p class="text-lg">Share this link with your friends to start planning!</p>
         <button class="schedule_link shadow shadow-accent py-1 px-4 rounded" on:click={copyToClipboard}>
-            linkup.w/me/scheduler/420
+            linkup.w/scheduler/{planID}
         </button>
         {#if copiedToClipboard}
             <p class="copied-text text-accent">Copied to clipboard!</p>
         {/if}
     </div>
     <div class="flex flex-row justify-evenly">
-        <a href="../main" class="bg-primary py-2 px-10 rounded text-lg">Home</a>
+        <a href="../main" class="bg-primary py-2 px-10 rounded-lg text-lg">Home</a>
     </div>
 </div>

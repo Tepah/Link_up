@@ -26,6 +26,7 @@
  * ```
  */
 declare module '$env/static/private' {
+	export const VITE_PUBLIC_API_BASE_URL: string;
 	export const MANPATH: string;
 	export const NODE: string;
 	export const INIT_CWD: string;
@@ -106,6 +107,7 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
+		VITE_PUBLIC_API_BASE_URL: string;
 		MANPATH: string;
 		NODE: string;
 		INIT_CWD: string;
