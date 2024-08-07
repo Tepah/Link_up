@@ -44,11 +44,17 @@ export const createUser = async (req: Request, res: Response) => {
     try {
         const { username, name, email, password } = req.body;
 
+        const existingUser = await User.findOne({ email });
+        console.log(existingUser);
+        if (existingUser) {
+            return res.status(409).send('User already exists');
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({ username, name, email, password: hashedPassword });
 
         await user.save();
-        res.status(200).json(user);
+        res.status(201).json(user);
     } catch (error) {
         res.status(500).send(error);
     }

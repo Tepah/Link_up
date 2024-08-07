@@ -109,11 +109,22 @@ export const postNewUser = async (url: String = '', user: User) => {
             },
             body: JSON.stringify(user)
         });
+        if (!response.ok) {
+            console.log(response.status)
+            switch (response.status) {
+                case 400:
+                    return 'bad_request';
+                case 409:
+                    return 'user_exists';
+                default:
+                    return 'error';
+            }
+        }
+
         const result = await response.json();
         console.log("User posted. postUser result: ", result);
     } catch (error) {
         console.error("Error posting user: ", error);
-        return error
     }
 }
 

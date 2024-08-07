@@ -26,24 +26,24 @@
     }
 </script>
 
-<div class="flex flex-col space-y-6 content-center items-center">
+<div class="flex flex-col space-y-6 content-center items-center ">
     <h1 class="text-2xl font-bold pt-20 md:pt-0">Create an account</h1>
-    <form class="flex flex-col space-y-6" method="POST">
-        <div>
-            <input id="username" type="text" bind:value={username} placeholder="Username">
+    <form class="flex flex-col" method="POST">
+        <div class="relative border-b-2 border-secondary drop-shadow m-4">
+            <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="username" type="text" bind:value={username} placeholder="Username">
         </div>
-        <div>
-            <input id="name" type="text" bind:value={name} placeholder="Name">
+        <div class="relative border-b-2 border-secondary drop-shadow m-4">
+            <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="name" type="text" bind:value={name} placeholder="Name">
         </div>
-        <div>
-            <input id="email" type="text" bind:value={email} placeholder="Email">
+        <div class="relative border-b-2 border-secondary drop-shadow m-4">
+            <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="email" type="text" bind:value={email} placeholder="Email">
         </div>
-        <div>
-            <input id="password" type="password" bind:value={password} placeholder="Password">
+        <div class="relative border-b-2 border-secondary drop-shadow m-4">
+            <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="password" type="password" bind:value={password} placeholder="Password">
         </div>
-        <div>
-            <input id="confirmPassword" type="password" bind:value={confirmPassword} placeholder="Confirm Password">
+        <div class="relative border-b-2 border-secondary drop-shadow m-4">
+            <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="confirmPassword" type="password" bind:value={confirmPassword} placeholder="Confirm Password">
         </div>
-        <button on:click={handleSubmit} type="submit" class="py-3 px-6 bg-primary text-lg rounded-xl inline-block">Sign up</button>
+        <button on:click={handleSubmit} type="submit" class="m-10 py-3 px-6 bg-primary text-lg rounded-xl inline-block">Sign up</button>
     </form>
 </div>

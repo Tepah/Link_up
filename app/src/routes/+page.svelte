@@ -47,7 +47,6 @@
         <div class="flex flex-col items-center justify-between py-2 w-[100%]">
             <h2 class="text-xl">No account?</h2>
             <button on:click={() => signupPage = !signupPage} class="flex-1 m-4 p-5 rounded-lg bg-primary bg-opacity-30 w-1/2">Sign up</button>
-            <a href="/main" class="flex-1 m-4 p-5 rounded-lg bg-primary w-1/2">Plan as a Guest</a>
         </div>
         {#if error === "Invalid credentials"}
             <p class="text-red-500">Invalid credentials</p>
