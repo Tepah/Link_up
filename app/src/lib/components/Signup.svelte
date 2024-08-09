@@ -21,8 +21,13 @@
                 password: password,
             };
             error = await postNewUser(url, user);
-            console.log(error);
         }
+    }
+
+    $: () => {
+        setTimeout(() => {
+            error = null;
+        }, 3000);
     }
 </script>
 
@@ -46,4 +51,13 @@
         </div>
         <button on:click={handleSubmit} type="submit" class="m-10 py-3 px-6 bg-primary text-lg rounded-xl inline-block">Sign up</button>
     </form>
+    {#if error === 'passwordMismatch'}
+        <p class="text-red-500">Passwords do not match</p>
+    {:else if error === 'user_exists'}
+        <p class="text-red-500">User already exists</p>
+    {:else if error === 'bad_request'}
+        <p class="text-red-500">User not found</p>
+    {:else if error === 'Invalid credentials'}
+        <p class="text-red-500">Invalid credentials</p>
+    {/if}
 </div>

@@ -42,10 +42,11 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
     try {
-        const { username, name, email, password } = req.body;
+        let { username, name, email, password } = req.body;
+
+        email = email.toLowerCase();
 
         const existingUser = await User.findOne({ email });
-        console.log(existingUser);
         if (existingUser) {
             return res.status(409).send('User already exists');
         }
