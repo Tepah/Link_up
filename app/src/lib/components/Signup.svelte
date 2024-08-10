@@ -2,10 +2,15 @@
     import {postNewUser} from "$lib/api";
 
     let username = '';
+    let usernameError = false;
     let name = '';
+    let nameError = false;
     let email = '';
+    let emailError = false;
     let password = '';
+    let passwordError = false;
     let confirmPassword = '';
+    let confirmPasswordError = false;
     let error: String | null | any = null;
 
     const handleSubmit = async (e: Event) => {
@@ -24,10 +29,12 @@
         }
     }
 
-    $: () => {
-        setTimeout(() => {
-            error = null;
-        }, 3000);
+    $: {
+        if (error) {
+            setTimeout(() => {
+                error = null;
+            }, 3000);
+        }
     }
 </script>
 
@@ -38,7 +45,7 @@
             <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="username" type="text" bind:value={username} placeholder="Username">
         </div>
         <div class="relative border-b-2 border-secondary drop-shadow m-4">
-            <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="name" type="text" bind:value={name} placeholder="Name">
+            <input class:text-red-500={nameError} class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="name" type="text" bind:value={name} placeholder="Name">
         </div>
         <div class="relative border-b-2 border-secondary drop-shadow m-4">
             <input class="w-full outline-none border-none p-10 py-2 bg-background rounded" id="email" type="text" bind:value={email} placeholder="Email">
@@ -59,5 +66,7 @@
         <p class="text-red-500">User not found</p>
     {:else if error === 'Invalid credentials'}
         <p class="text-red-500">Invalid credentials</p>
+    {:else if error === "error"}
+        <p class="text-red-500">Please fill in all fields</p>
     {/if}
 </div>
