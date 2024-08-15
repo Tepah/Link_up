@@ -46,10 +46,24 @@ export const createUser = async (req: Request, res: Response) => {
 
         email = email.toLowerCase();
 
+        // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).send('User already exists');
         }
+
+        // Check if password is valid
+        if (password.length < 6) {
+            return res.status(400).send('Password must be at least 6 characters long');
+        } else {
+            const hasNumber = /\d/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            if (!hasNumber || !hasUpper || !hasLower) {
+                return res.status(400).send('Password must contain at least one uppercase letter, one lowercase letter, and one number');
+            }
+        }
+
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({ username, name, email, password: hashedPassword });

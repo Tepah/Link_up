@@ -113,7 +113,7 @@ export const postNewUser = async (url: String = '', user: User) => {
             console.log(response.status)
             switch (response.status) {
                 case 400:
-                    return 'bad_request';
+                    return 'password_error';
                 case 409:
                     return 'user_exists';
                 default:
@@ -141,6 +141,7 @@ export const postLogin = async (url: String = '', username: String, password: St
             },
             body: JSON.stringify(user)
         });
+        console.log(response.status);
         if (!response.ok) {
             switch (response.status) {
                 case 400:
