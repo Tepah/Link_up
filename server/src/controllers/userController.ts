@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
 
 export const getUsers = async (req: Request, res: Response) => {
@@ -28,7 +29,8 @@ export const loginUser = async (req: Request, res: Response) => {
         if (user) {
             const valid = await bcrypt.compare(password, user.password);
             if (valid) {
-                res.status(200).json(user);
+                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
+                res.status(200).json({ token, user });
             } else {
                 res.status(401).send('Invalid credentials');
             }
@@ -69,7 +71,8 @@ export const createUser = async (req: Request, res: Response) => {
         const user = new User({ username, name, email, password: hashedPassword });
 
         await user.save();
-        res.status(201).json(user);
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string);
+        res.status(201).json({ token, user });
     } catch (error) {
         res.status(500).send(error);
     }
