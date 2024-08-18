@@ -124,6 +124,7 @@ export const postNewUser = async (url: String = '', user: User) => {
         const result = await response.json();
         console.log("User posted. postUser result: ", result);
         // Store the token in local storage
+        console.log(result.token);
         localStorage.setItem('token', result.token);
         return result;
     } catch (error) {

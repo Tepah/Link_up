@@ -1,5 +1,6 @@
 <script lang="ts">
     import {postNewUser} from "$lib/api";
+    import {loginToken} from "$lib/stores.js";
 
     let username = '';
     let usernameError = false;
@@ -52,6 +53,7 @@
                 confirmPasswordError = true;
                 console.log("Password error");
             } else {
+                loginToken.set(String(localStorage.getItem('token')));
                 console.log("User created");
             }
         }

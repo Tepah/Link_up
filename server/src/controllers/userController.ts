@@ -102,3 +102,16 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 }
 
+export const authenticateToken = (req: Request, res: Response, next: any) => {
+    const token = req.headers['authorization'];
+    if (!token) {
+        return res.status(401).send('Access denied');
+    }
+    jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
+        if (err) {
+            return res.status(403).send('Invalid token');
+        }
+        req.user = user;
+        next();
+    })
+}

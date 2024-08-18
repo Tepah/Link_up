@@ -4,12 +4,13 @@
     import password_logo from '$lib/images/password_logo.png';
     import Signup from '$lib/components/Signup.svelte';
     import {postLogin} from '$lib/api';
+    import {onMount} from "svelte";
+    import {loginToken} from '$lib/stores.js';
 
     let email: String = '';
     let password: String = '';
     let error: String | null = null;
     let signupPage: Boolean = false;
-    let signedIn = localStorage.getItem('token');
 
     const signIn = async (e: Event) => {
         e.preventDefault();
@@ -23,9 +24,18 @@
 
         }
     }
+
+    $: console.log($loginToken);
+
+    onMount(async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            $loginToken = token;
+        }
+    });
 </script>
 
-{#if !signedIn}
+{#if !$loginToken}
     {#if !signupPage}
         <div class="my-2">
             <div class="flex items-center justify-center py-8">
