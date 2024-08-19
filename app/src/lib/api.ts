@@ -124,7 +124,6 @@ export const postNewUser = async (url: String = '', user: User) => {
         const result = await response.json();
         console.log("User posted. postUser result: ", result);
         // Store the token in local storage
-        console.log(result.token);
         localStorage.setItem('token', result.token);
         return result;
     } catch (error) {
@@ -162,6 +161,7 @@ export const postLogin = async (url: String = '', username: String, password: St
         }
         const result = await response.json();
         console.log("User logged in. postLogin result: ", result);
+        localStorage.setItem('token', result.token);
         return result;
     } catch (error) {
         console.error("Error logging in: ", error);

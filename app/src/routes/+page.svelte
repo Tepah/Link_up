@@ -21,7 +21,7 @@
         } else if (login === 'User not found') {
             error = 'User not found';
         } else {
-
+            loginToken.set(String(localStorage.getItem('token')));
         }
     }
 
