@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
+import { RequestWithUser, UserPayload } from "../types/types";
 
 export const getUsers = async (req: Request, res: Response) => {
     try {
@@ -102,16 +103,16 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 }
 
-export const authenticateToken = (req: Request, res: Response, next: any) => {
+export const authenticateToken = (req: RequestWithUser, res: Response, next: any) => {
     const token = req.headers['authorization'];
     if (!token) {
-        return res.status(401).send('Access denied');
+        return res.status(401).send('No Token provided');
     }
     jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
         if (err) {
             return res.status(403).send('Invalid token');
         }
-        req.user = user;
+        req.user = user as UserPayload;
         next();
     })
 }

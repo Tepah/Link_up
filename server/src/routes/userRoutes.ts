@@ -8,11 +8,16 @@ import {
     loginUser,
     authenticateToken
 } from '../controllers/userController';
+import {RequestWithUser} from "../types/types";
 
 const router = Router();
 
-router.get('/users/auth', authenticateToken, (req, res) => {
-    res.json({ message: 'Authenticated' });
+router.get('/users/auth', authenticateToken, (req: RequestWithUser, res) => {
+    if (req.user) {
+        res.json(req.user);
+    } else {
+        res.status(401).send('Unauthorized');
+    }
 })
 router.get('/users', getUsers);
 router.get('/users/:id', getUser);
