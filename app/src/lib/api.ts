@@ -3,6 +3,34 @@ import type { Writable} from 'svelte/store';
 import { get } from 'svelte/store';
 
 // GET requests
+export const authenticateToken = async (url: String = '', token: String) => {
+    try {
+        const response = await fetch(url + '/users/auth', {
+            headers: {
+                'Authorization': token,  // Ensure the token is sent in the Authorization header
+            },
+        });
+        if (!response.ok) {
+            console.log(response.status);
+            switch (response.status) {
+                case 401:
+                    return 'unauthorized';
+                case 403:
+                    return 'forbidden';
+                case 404:
+                    return 'not_found';
+                default:
+                    return 'error';
+            }
+        }
+        const result = await response.json();
+        console.log("Token authenticated. authenticateToken result: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error authenticating token: ", error);
+    }
+}
+
 export const getUserByID = async (url: String = '', uid: String) => {
     try {
         const response = await fetch(url + '/users/' + uid);

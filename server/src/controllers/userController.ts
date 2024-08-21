@@ -24,7 +24,9 @@ export const getUser = async ( req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
+
+        email = email.toLowerCase();
 
         const user = await User.findOne({ email });
         if (user) {
