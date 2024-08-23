@@ -8,13 +8,9 @@
     import {loginToken} from '$lib/stores.js';
     import {signupPage} from '$lib/stores.js';
     import Login from "$lib/components/Login.svelte";
+    import Main from "$lib/components/Main.svelte";
 
     console.log($signupPage);
-
-    const logOut = () => {
-        localStorage.removeItem('token');
-        $loginToken = null;
-    }
 
     $: console.log($loginToken);
 
@@ -29,8 +25,6 @@
                 $loginToken = null;
             } else {
                 const userID = tokenResult.id;
-                const user = await getUserByID(url, userID);
-                console.log(user);
             }
         }
     });
@@ -52,6 +46,5 @@
         </div>
     {/if}
 {:else}
-    <p>signed in!</p>
-    <button on:click={()=> logOut()}>logout</button>
+    <Main />
 {/if}

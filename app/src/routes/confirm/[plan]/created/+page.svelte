@@ -53,7 +53,7 @@
     </div>
     <div class="flex flex-col space-y-6 justify-evenly items-center">
         <button on:click={onSummaryClick} class="bg-secondary py-2 px-10 rounded-xl text-lg">View plan details</button>
-        <a href="../../main" class="bg-primary py-2 px-10 rounded-xl text-lg">Go home</a>
+        <a href="../../" class="bg-primary py-2 px-10 rounded-xl text-lg">Go home</a>
     </div>
     {:else}
     <h1 class="text-4xl">Loading...</h1>
