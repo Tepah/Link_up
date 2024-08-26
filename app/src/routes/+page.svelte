@@ -23,8 +23,6 @@
             if (tokenResult === 'Invalid token') {
                 localStorage.removeItem('token');
                 $loginToken = null;
-            } else {
-                const userID = tokenResult.id;
             }
         }
     });

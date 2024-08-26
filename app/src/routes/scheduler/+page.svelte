@@ -1,12 +1,12 @@
 <script lang="ts">
     import { availableDates } from "$lib/stores.js";
-    import { postSchedule, postIncompletePlan } from "$lib/api.ts";
+    import {postSchedule, postIncompletePlan, getUserByID, authenticateToken} from "$lib/api.ts";
+    import {onMount} from "svelte";
 
     const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
-    // TODO: Change temporary user ID to actual user ID with cookies
-    const name = 'Pet'
-    const userID = '6673b2f5e514d10c958207fd'
+    let userID: String;
+    let name: String;
 
 
     const handleConfirmClick = async () => {
@@ -27,6 +27,16 @@
         sessionStorage.setItem('incompletePlanID', incompletePlanID);
         window.location.href = `/share/${incompletePlanID}`;
     }
+
+    onMount (async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const tokenResults = await authenticateToken(url, token);
+            userID = tokenResults.id;
+            const user = await getUserByID(url, userID);
+            name = user.name;
+        }
+    });
 </script>
 
 <div class="flex flex-row justify-evenly">

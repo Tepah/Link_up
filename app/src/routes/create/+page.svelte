@@ -1,5 +1,4 @@
 <script>
-    import Cookies from 'js-cookie';
 
     let name = '';
     let description = '';
@@ -18,10 +17,6 @@
         window.location.href = '/scheduler'
     };
 
-    // TODO: use this for future LOGIN on MAIN
-    // $: if (Cookies.get('token') === undefined) {
-    //     window.location.href = '/main';
-    // }
 </script>
 
 <div class="flex flex-col space-y-6 w-[100%]">

@@ -4,7 +4,7 @@
     import Settings from "$lib/components/Settings.svelte";
     import {goto} from '$app/navigation';
     import {onMount} from "svelte";
-    import {deletePlan, getAllIncompleteByID, getAllPlansByID, postArchive} from "$lib/api";
+    import {authenticateToken, deletePlan, getAllIncompleteByID, getAllPlansByID, postArchive} from "$lib/api";
 
     const url = "http://localhost:3000"
 
@@ -55,7 +55,14 @@
     }
 
     onMount(async () => {
-
+        const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
+        const tokenResults = await authenticateToken(url, localStorage.getItem('token'));
+        if (tokenResults === 'Invalid token') {
+            localStorage.removeItem('token');
+            goto('/');
+        } else {
+            userID = tokenResults.id;
+        }
         await getPlans();
         for (let i = 0; i < plans.upcoming.length; i++) {
             let plan = plans.upcoming[i];

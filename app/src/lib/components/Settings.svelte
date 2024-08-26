@@ -1,6 +1,11 @@
 <script lang="ts">
     export let toggleSettings: () => void;
     import profilePic from "$lib/images/profile.jpeg";
+
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    }
 </script>
 
 <div class="flex flex-col justify-center items-center w-[80%] space-y-4">
@@ -15,7 +20,7 @@
             <input id="toggle" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600">
         </div>
         <button class="planItem py-1 bg-secondary bg-opacity-20 text-lg rounded-xl">Change password</button>
-        <button class="planItem py-1 bg-red-300 text-lg rounded-xl">Sign out</button>
+        <button on:click={()=> handleSignOut()} class="planItem py-1 bg-red-300 text-lg rounded-xl">Sign out</button>
     </div>
     <div class="flex flex-row justify-evenly p-2 w-[70%] h-[10%]">
         <button class="planItem py-1 px-6 bg-secondary bg-opacity-20 text-lg rounded-xl" on:click={toggleSettings}>Close</button>
