@@ -34,6 +34,6 @@
         {/if}
     </div>
     <div class="flex flex-row justify-evenly">
-        <a href="../main" class="bg-primary py-2 px-10 rounded-lg text-lg">Home</a>
+        <a href="../" class="bg-primary py-2 px-10 rounded-lg text-lg">Home</a>
     </div>
 </div>

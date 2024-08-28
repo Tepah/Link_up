@@ -3,6 +3,34 @@ import type { Writable} from 'svelte/store';
 import { get } from 'svelte/store';
 
 // GET requests
+export const authenticateToken = async (url: String = '', token: String) => {
+    try {
+        const response = await fetch(url + '/users/auth', {
+            headers: {
+                'Authorization': token,  // Ensure the token is sent in the Authorization header
+            },
+        });
+        if (!response.ok) {
+            console.log(response.status);
+            switch (response.status) {
+                case 401:
+                    return 'unauthorized';
+                case 403:
+                    return 'forbidden';
+                case 404:
+                    return 'not_found';
+                default:
+                    return 'error';
+            }
+        }
+        const result = await response.json();
+        console.log("Token authenticated. authenticateToken result: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error authenticating token: ", error);
+    }
+}
+
 export const getUserByID = async (url: String = '', uid: String) => {
     try {
         const response = await fetch(url + '/users/' + uid);
@@ -100,6 +128,75 @@ export const getSchedule = async (url: String = '', scheduleID: String = '') => 
 }
 
 // POST requests
+export const postNewUser = async (url: String = '', user: User) => {
+    try {
+        const response = await fetch(url + '/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+        if (!response.ok) {
+            console.log(response.status)
+            switch (response.status) {
+                case 400:
+                    return 'password_error';
+                case 409:
+                    return 'user_exists';
+                default:
+                    return 'error';
+            }
+        }
+
+        const result = await response.json();
+        console.log("User posted. postUser result: ", result);
+        // Store the token in local storage
+        localStorage.setItem('token', result.token);
+        return result;
+    } catch (error) {
+        console.error("Error posting user: ", error);
+    }
+}
+
+export const postLogin = async (url: String = '', username: String, password: String) => {
+    try {
+        const user = {
+            email: username,
+            password: password
+        }
+        const response = await fetch(url + '/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+        console.log(response.status);
+        if (!response.ok) {
+            switch (response.status) {
+                case 400:
+                    return 'bad_request';
+                case 401:
+                    return "Invalid credentials";
+                case 403:
+                    return 'forbidden';
+                case 404:
+                    return "User not found";
+                default:
+                    return "Error";
+            }
+        }
+        const result = await response.json();
+        console.log("User logged in. postLogin result: ", result);
+        localStorage.setItem('token', result.token);
+        return result;
+    } catch (error) {
+        console.error("Error logging in: ", error);
+        return error;
+    }
+}
+
 export const postPlan = async (url: String = '', plan: Plan) => {
     try {
         const response = await fetch(url + '/plans', {
