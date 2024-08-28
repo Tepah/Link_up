@@ -264,7 +264,6 @@ export const postArchive = async (url: String, plan: Plan) => {
 
 export const postSchedule = async (url: String = '',
                                    userID: String = '',
-                                   name: String = '',
                                    availableDates: Writable<unknown>) => {
     try {
         const response = await fetch(url + '/schedules', {
@@ -301,6 +300,22 @@ export const updatePlan = async (url: String = '', plan: Plan) => {
         console.log("Plan updated. putPlan result: ", result);
     } catch (error) {
         console.error("Error updating plan: ", error);
+    }
+}
+
+export const updateIncompletePlan = async (url: String = '', plan: Incomplete) => {
+    try {
+        const response = await fetch(url + '/incomplete/' + plan._id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(plan)
+        });
+        const result = await response.json();
+        console.log("Incomplete plan updated. putIncompletePlan result: ", result);
+    } catch (error) {
+        console.error("Error updating incomplete plan: ", error);
     }
 }
 

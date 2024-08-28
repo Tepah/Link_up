@@ -1,13 +1,16 @@
 <script lang="ts">
     import { availableDates } from "$lib/stores.js";
-    import {postSchedule, postIncompletePlan, getUserByID, authenticateToken} from "$lib/api.ts";
+    import {
+        postSchedule,
+        postIncompletePlan,
+        authenticateToken,
+        getIncompletePlan
+    } from "$lib/api";
     import {onMount} from "svelte";
 
     const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
     let userID: String;
-    let name: String;
-
 
     const handleConfirmClick = async () => {
         if (!$availableDates || $availableDates.length === 0) {
@@ -15,7 +18,8 @@
             return;
         }
         // This is where the selected dates are sent to the server
-        const scheduleId = await postSchedule(url, userID, name, availableDates);
+        const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
+        const scheduleId = await postSchedule(url, userID, availableDates);
         const incompletePlanID = await postIncompletePlan(url,
             userID,
             sessionStorage.getItem('planName'),
@@ -30,11 +34,12 @@
 
     onMount (async () => {
         const token = localStorage.getItem('token');
+        incompletePlan = await getIncompletePlan(url, incompletePlanID);
         if (token) {
             const tokenResults = await authenticateToken(url, token);
             userID = tokenResults.id;
-            const user = await getUserByID(url, userID);
-            name = user.name;
+        } else {
+            window.location.href = '/';
         }
     });
 </script>
