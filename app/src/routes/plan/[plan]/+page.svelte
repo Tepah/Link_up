@@ -18,7 +18,7 @@
         const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
         await deletePlan(url, plan._id);
 
-        window.location.href = '/main';
+        window.location.href = '/';
     }
 
     const editModeToggle = () => {

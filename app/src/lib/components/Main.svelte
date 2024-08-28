@@ -4,7 +4,14 @@
     import Settings from "$lib/components/Settings.svelte";
     import {goto} from '$app/navigation';
     import {onMount} from "svelte";
-    import {authenticateToken, deletePlan, getAllIncompleteByID, getAllPlansByID, postArchive} from "$lib/api";
+    import {
+        authenticateToken,
+        deletePlan,
+        getAllIncompleteByID,
+        getAllPlansByID,
+        getUserByID,
+        postArchive
+    } from "$lib/api";
 
     const url = "http://localhost:3000"
 
@@ -13,7 +20,7 @@
     let showAllIncomplete = false;
     let settingsOpen = false;
     let loading = true;
-    let user = {name: "Pete"}
+    let user: User;
     let plans: {upcoming: Plan[], incomplete: Incomplete[]} = {upcoming: [], incomplete: []};
 
     const toggleUpcoming = () => {
@@ -62,6 +69,7 @@
             goto('/');
         } else {
             userID = tokenResults.id;
+            user = await getUserByID(url, userID);
         }
         await getPlans();
         for (let i = 0; i < plans.upcoming.length; i++) {
