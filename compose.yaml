@@ -3,16 +3,33 @@ services:
     build:
       context: ./app
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       VITE_PUBLIC_API_BASE_URL: http://localhost:3000
     ports:
       - 5173:5173
+    depends_on:
+      - link-up-server
     develop:
       watch:
         - path: ./app/package.json
           action: rebuild
-        - path: ./app/src
-          target: /app/src
+        - path: ./app
+          target: /app
+          action: sync
+
+  link-up-server:
+    build:
+      context: ./server
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: development
+    develop:
+      watch:
+        - path: ./server/package.json
+          action: rebuild
+        - path: ./server
+          target: /server
           action: sync
 
 

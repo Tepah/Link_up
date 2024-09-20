@@ -34,7 +34,6 @@
 
     onMount (async () => {
         const token = localStorage.getItem('token');
-        incompletePlan = await getIncompletePlan(url, incompletePlanID);
         if (token) {
             const tokenResults = await authenticateToken(url, token);
             userID = tokenResults.id;
