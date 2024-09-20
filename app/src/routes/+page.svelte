@@ -12,8 +12,6 @@
 
     let loading = true;
 
-    console.log($signupPage);
-
     $: console.log($loginToken);
 
     onMount(async () => {

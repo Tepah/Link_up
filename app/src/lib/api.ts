@@ -57,6 +57,7 @@ export const getAllPlansByID = async (url: String = '', userID: String = '') => 
 
 export const getAllIncompleteByID = async (url: String = '', userID: String = '') => {
     try {
+        console.log("URL: ", url, "userID: ", userID);
         let response = await fetch(url + `/incomplete/user/${userID}`);
         const userIncomplete: [Incomplete] = await response.json();
         console.log("getIncompleteByID result: ", userIncomplete);
@@ -264,8 +265,10 @@ export const postArchive = async (url: String, plan: Plan) => {
 
 export const postSchedule = async (url: String = '',
                                    userID: String = '',
+                                   name: String = '',
                                    availableDates: Writable<unknown>) => {
     try {
+        console.log(url);
         const response = await fetch(url + '/schedules', {
             method: 'POST',
             headers: {

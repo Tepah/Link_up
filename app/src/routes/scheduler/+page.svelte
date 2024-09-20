@@ -4,13 +4,14 @@
         postSchedule,
         postIncompletePlan,
         authenticateToken,
-        getIncompletePlan
+        getIncompletePlan, getUserByID
     } from "$lib/api";
     import {onMount} from "svelte";
 
     const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
     let userID: String;
+    let username: String;
 
     const handleConfirmClick = async () => {
         if (!$availableDates || $availableDates.length === 0) {
@@ -19,7 +20,7 @@
         }
         // This is where the selected dates are sent to the server
         const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
-        const scheduleId = await postSchedule(url, userID, availableDates);
+        const scheduleId = await postSchedule(url, userID, username, availableDates);
         const incompletePlanID = await postIncompletePlan(url,
             userID,
             sessionStorage.getItem('planName'),
@@ -34,9 +35,12 @@
 
     onMount (async () => {
         const token = localStorage.getItem('token');
+
         if (token) {
             const tokenResults = await authenticateToken(url, token);
             userID = tokenResults.id;
+            const user = await getUserByID(url, userID);
+            username = user.name;
         } else {
             window.location.href = '/';
         }
