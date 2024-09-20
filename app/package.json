@@ -25,5 +25,13 @@
 	"type": "module",
 	"dependencies": {
 		"js-cookie": "^3.0.5"
+	},
+	"optionalDependencies": {
+		"@rollup/rollup-linux-arm64-gnu": "^4.21.3"
+	},
+	"overrides": {
+		"vite": {
+			"rollup": "npm:@rollup/wasm-node@^4.9.2"
+		}
 	}
 }
