@@ -92,7 +92,7 @@ export const createIncompletePlan = async (req: Request, res: Response) => {
  */
 export const updateIncompletePlan = async (req: Request, res: Response) => {
     try {
-        const incompletePlan = await IncompletePlan.findByIdAndUpdate(req.body);
+        const incompletePlan = await IncompletePlan.findByIdAndUpdate(req.params.id, req.body);
         if (!incompletePlan) {
             return res.status(404).send('Incomplete plan not found');
         }

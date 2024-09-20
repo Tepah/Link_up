@@ -11,11 +11,11 @@
     import {availableDates} from "$lib/stores.js";
 
     const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
-    const incompletePlanID = window.location.pathname.split('/')[2];
 
     let userID: String;
     let user: User;
     let incompletePlan: Incomplete;
+    let incompletePlanID: String;
 
     const handleConfirmClick = async () => {
         // TODO: Change to actual error
@@ -23,7 +23,7 @@
             alert('Please select at least one date');
             return;
         }
-        const scheduleId = await postSchedule(url, userID, availableDates);
+        const scheduleId = await postSchedule(url, userID, user.name, availableDates);
         await updateIncompletePlan(url, {
             ...incompletePlan,
             schedules: [...incompletePlan.schedules, scheduleId]
@@ -35,14 +35,16 @@
 
 
     onMount(async () => {
-      const token = localStorage.getItem('token');
-      incompletePlan = await getIncompletePlan(url, incompletePlanID);
-      if (token) {
-        const tokenResults = await authenticateToken(url, token);
-        userID = tokenResults.id;
-      } else {
-        window.location.href = '/';
-      }
+        const token = localStorage.getItem('token');
+        if (token) {
+            const tokenResults = await authenticateToken(url, token);
+            userID = tokenResults.id;
+            user = await getUserByID(url, userID);
+        } else {
+            window.location.href = '/';
+        }
+        incompletePlanID = window.location.pathname.split('/')[2];
+        incompletePlan = await getIncompletePlan(url, incompletePlanID);
     });
 </script>
 

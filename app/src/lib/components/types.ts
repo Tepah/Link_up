@@ -11,7 +11,7 @@ type Incomplete = {
     _id?: String,
     title: String,
     description?: String,
-    schedules: [String],
+    schedules: [String] | [],
     host: String,
 };
 
