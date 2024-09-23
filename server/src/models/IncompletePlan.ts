@@ -7,4 +7,4 @@ const incompletePlanSchema = new Schema({
     host: { type: String, required: true }
 });
 
-export const IncompletePlan = model('UnconfirmedPlan', incompletePlanSchema);
+export const IncompletePlan = model('IncompletePlan', incompletePlanSchema);
