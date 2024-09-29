@@ -1,6 +1,5 @@
-import { availableDates } from "$lib/stores.js";
-import type { Writable} from 'svelte/store';
-import { get } from 'svelte/store';
+import type {Writable} from 'svelte/store';
+import {get} from 'svelte/store';
 
 // GET requests
 export const authenticateToken = async (url: String = '', token: String) => {
@@ -361,4 +360,13 @@ export const deleteIncompletePlan = async (url: String = '', planID: String = ''
     } catch (error) {
         console.error("Error deleting incomplete plan: ", error);
     }
+}
+
+// Token authentication
+export const authenticate = async (url: String = '') => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        return null;
+    }
+    return await authenticateToken(url, token);
 }
