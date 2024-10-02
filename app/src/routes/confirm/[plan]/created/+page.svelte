@@ -38,7 +38,7 @@
 
 <div class="flex flex-col space-y-10 justify-center h-[100%]">
     {#if plan}
-    <h1 class="text-4xl">Let's link up!</h1>
+    <h1 class="text-4xl">Let's get this out the chat!</h1>
     <p class="px-5">Your plan for <span class="text-accent underline">{plan.title}</span> on
         <span class="text-accent underline">{DAYS[planDate.getDay()]}, {MONTHS[planDate.getMonth()]} {planDate.getDate()}</span>
         has been made! Let your friends know! We'll also add it to everyone's schedules.</p>

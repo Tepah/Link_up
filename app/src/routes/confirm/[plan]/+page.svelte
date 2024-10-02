@@ -1,5 +1,6 @@
 <script lang="ts">
     import Calendar from '$lib/components/Calendar_2.svelte';
+    import {availableDates as newAvailableDates} from "$lib/stores.js";
     import {selectedDate} from '$lib/stores.js';
     import {authenticate, deleteIncompletePlan, getAllIDsOnSchedules, getAllSchedules, postPlan} from "$lib/api";
     import {onMount} from "svelte";
@@ -8,10 +9,11 @@
     const originalDate = $selectedDate;
     const url = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
-    let availableDates: Date[];
+    let availableDates: Date[] = [];
     let copiedToClipboard: boolean = false;
     let noSelectedDate: boolean = false;
     let userID: string;
+    let editing: boolean = false;
 
     const copyToClipboard = async () => {
         const textToCopy: string | null | undefined = document.querySelector('.schedule_link')?.textContent;
@@ -49,8 +51,16 @@
         window.location.href = '/confirm/420/created'
     }
 
+    const onButtonClick = () => {
+        editing = true;
+    }
+
+    const handleEditConfirmClick = () => {
+
+    }
+
     onMount(async () => {
-        userID = await authenticate(localStorage.getItem('token'));
+        userID = (await authenticate(url, localStorage.getItem('token'))).id;
         if (!userID) {
             window.location.href = '/';
         }
@@ -62,6 +72,7 @@
     })
 </script>
 
+<!--If the user is the host user-->
 {#if incompletePlan.host === userID}
     <div class="flex flex-col space-y-6 h-[100%] w-[100%]">
         <div class="relative">
@@ -94,8 +105,43 @@
             {/if}
         </div>
     </div>
+<!--If the user is a guest-->
 {:else}
-    <h1 class="text-3xl text-center">You are not the host of this plan</h1>
+    {#if !editing}
+        <div class="flex flex-col space-y-10 justify-center h-[100%]">
+            <div class="relative">
+                <a href="/" class="absolute top-0 left-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                </a>
+            </div>
+            <h1 class="text-2xl">Let's get this out the chat.</h1>
+            <p class="px-5">Your schedule is already in this plan, wait till the host finalizes the date and we'll put it in your
+                schedule.</p>
+            <div class="flex flex-col space-y-6 justify-evenly items-center">
+                <button on:click={onButtonClick} class="bg-primary py-2 px-10 rounded-xl text-lg">Change your availability</button>
+            </div>
+        </div>
+    {:else}
+        <div class="flex flex-col space-y-6 h-[100%] w-[100%]">
+            <div class="relative">
+                <a href="/" class="absolute top-0 left-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                </a>
+            </div>
+            <div class="flex flex-col">
+                <p class="text-lg pb-6 pt-20 md:pt-0">Choose your availability:</p>
+                <Calendar availableDates={$newAvailableDates} />
+            </div>
+
+            <div class="flex flex-col justify-evenly">
+                <button on:click={ () => handleEditConfirmClick() } class="bg-primary py-2 px-10 rounded text-lg">Confirm</button>
+            </div>
+        </div>
+    {/if}
 {/if}
 
 <style>
