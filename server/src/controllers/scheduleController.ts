@@ -20,6 +20,25 @@ export const getSchedules = async (req: Request, res: Response) => {
 }
 
 /**
+ * Retrieves all schedules from the database by user ID and incomplete Plan ID.
+ *
+ * @async
+ * @function getSchedulesByUserAndPlan
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @throws {Error} If an error occurs during database retrieval.
+ */
+
+export const getSchedulesByUserAndPlan = async (req: Request, res: Response) => {
+    try {
+        const schedule = await Schedule.find({ userID: req.params.userID, planID: req.params.planID});
+        res.json(schedule);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
+/**
  * Retrieves a schedule from the database by ID.
  *
  * @async

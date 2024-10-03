@@ -1,8 +1,9 @@
 <script lang="ts">
     import Calendar from '$lib/components/Calendar_2.svelte';
+    import EditCalendar from '$lib/components/Calendar_1.svelte';
     import {availableDates as newAvailableDates} from "$lib/stores.js";
     import {selectedDate} from '$lib/stores.js';
-    import {authenticate, deleteIncompletePlan, getAllIDsOnSchedules, getAllSchedules, postPlan} from "$lib/api";
+    import {authenticate, deleteIncompletePlan, getAllIDsOnSchedules, getScheduleID, getAllSchedules, postPlan} from "$lib/api";
     import {onMount} from "svelte";
 
     const incompletePlan: Incomplete = JSON.parse(String(sessionStorage.getItem('incomplete')));
@@ -14,6 +15,12 @@
     let noSelectedDate: boolean = false;
     let userID: string;
     let editing: boolean = false;
+    let userSchedule: Schedule;
+
+    // todo:
+    // 1. Add a way to edit the schedule
+    // 2. Add a way to delete the schedule
+    // 3. Make plan a loading plan
 
     const copyToClipboard = async () => {
         const textToCopy: string | null | undefined = document.querySelector('.schedule_link')?.textContent;
@@ -55,7 +62,12 @@
         editing = true;
     }
 
-    const handleEditConfirmClick = () => {
+    const handleEditConfirmClick = async () => {
+        if (!$newAvailableDates || $newAvailableDates.length === 0) {
+            alert('Please select at least one date');
+            return;
+        }
+        console.log(userSchedule._id);
 
     }
 
@@ -66,9 +78,12 @@
         }
         const incompletePlan = JSON.parse(String(sessionStorage.getItem('incomplete')));
         const allSchedules = await getAllSchedules(url, incompletePlan.schedules);
-        const availableDatesStrings = allSchedules.map(schedule => schedule.dates).flat();
-        availableDates = availableDatesStrings.map(date => new Date(date));
-        console.log(availableDates);
+        if (incompletePlan.host === userID){
+            const availableDatesStrings = allSchedules.map(schedule => schedule.dates).flat();
+            availableDates = availableDatesStrings.map(date => new Date(date));
+            console.log(availableDates);
+        }
+        userSchedule = allSchedules.find(schedule => schedule.userID === userID)!;
     })
 </script>
 
@@ -134,7 +149,7 @@
             </div>
             <div class="flex flex-col">
                 <p class="text-lg pb-6 pt-20 md:pt-0">Choose your availability:</p>
-                <Calendar availableDates={$newAvailableDates} />
+                <EditCalendar />
             </div>
 
             <div class="flex flex-col justify-evenly">

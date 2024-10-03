@@ -124,7 +124,18 @@ export const getSchedule = async (url: String = '', scheduleID: String = '') => 
         console.error("Error getting schedule: ", error);
         return {};
     }
+}
 
+export const getScheduleID = async (url: String = '', userID: String = '', planID: String = '') => {
+    try {
+        const response = await fetch(url + '/schedules/' + userID + '/' + planID);
+        const result: Schedule = await response.json();
+        console.log("getScheduleID result: ", result);
+        return result._id;
+    } catch (error) {
+        console.error("Error getting schedule ID: ", error);
+        return "";
+    }
 }
 
 // POST requests
