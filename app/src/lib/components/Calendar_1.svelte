@@ -2,7 +2,7 @@
     import {onMount} from "svelte";
     import {availableDates} from "$lib/stores.js";
 
-    let selectedDates: (Date | null | undefined)[] = [];
+    export let selectedDates: (Date | null | undefined)[] = [];
 
     $: $availableDates = selectedDates;
 

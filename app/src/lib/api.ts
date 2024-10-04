@@ -87,7 +87,7 @@ export const getAllSchedules = async (url: String = '', schedules: String[]) => 
         const schedule: Schedule = await getSchedule(url, id);
         allSchedules.push(schedule);
     }
-    console.log(allSchedules);
+    console.log("All Schedules Aquired: ", allSchedules);
     return allSchedules
 }
 
@@ -329,6 +329,24 @@ export const updateIncompletePlan = async (url: String = '', plan: Incomplete) =
         console.log("Incomplete plan updated. putIncompletePlan result: ", result);
     } catch (error) {
         console.error("Error updating incomplete plan: ", error);
+    }
+}
+
+export const updateSchedule = async (url: String = '', schedule: Schedule) => {
+    try {
+        console.log(schedule);
+        const response = await fetch(url + '/schedules/' + schedule._id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(schedule)
+        });
+        const result = await response.json();
+        console.log("Schedule updated. putSchedule result: ", result);
+        return result;
+    } catch (error) {
+        console.error("Error updating schedule: ", error);
     }
 }
 

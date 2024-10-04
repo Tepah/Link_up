@@ -3,7 +3,15 @@
     import EditCalendar from '$lib/components/Calendar_1.svelte';
     import {availableDates as newAvailableDates} from "$lib/stores.js";
     import {selectedDate} from '$lib/stores.js';
-    import {authenticate, deleteIncompletePlan, getAllIDsOnSchedules, getScheduleID, getAllSchedules, postPlan} from "$lib/api";
+    import {
+        authenticate,
+        deleteIncompletePlan,
+        getAllIDsOnSchedules,
+        getScheduleID,
+        getAllSchedules,
+        postPlan,
+        updateSchedule
+    } from "$lib/api";
     import {onMount} from "svelte";
 
     const incompletePlan: Incomplete = JSON.parse(String(sessionStorage.getItem('incomplete')));
@@ -16,11 +24,25 @@
     let userID: string;
     let editing: boolean = false;
     let userSchedule: Schedule;
+    let loading = true;
 
     // todo:
     // 1. Add a way to edit the schedule
     // 2. Add a way to delete the schedule
     // 3. Make plan a loading plan
+
+    const condenseAllDates = (allSchedules: Schedule[]) => {
+        const availableDatesStrings = allSchedules.map(schedule => schedule.dates).flat();
+        const dateFilter = Object.entries(availableDatesStrings.reduce((acc, dateString) => {
+            // Increment the count for this date
+            acc[dateString] = (acc[dateString] || 0) + 1;
+
+            return acc;
+        }, {}))
+            .filter(([date, count]) => count > 1)
+            .map(([date, count]) => date);
+        availableDates = dateFilter.map(date => new Date(date));
+    }
 
     const copyToClipboard = async () => {
         const textToCopy: string | null | undefined = document.querySelector('.schedule_link')?.textContent;
@@ -58,8 +80,8 @@
         window.location.href = '/confirm/420/created'
     }
 
-    const onButtonClick = () => {
-        editing = true;
+    const editToggle = () => {
+        editing = !editing;
     }
 
     const handleEditConfirmClick = async () => {
@@ -67,8 +89,14 @@
             alert('Please select at least one date');
             return;
         }
-        console.log(userSchedule._id);
-
+        userSchedule = {
+            ...userSchedule,
+            dates: $newAvailableDates.map(date => date.toString())
+        }
+        const update = await updateSchedule(url, userSchedule);
+        if (update !== null) {
+            window.location.href = '/';
+        }
     }
 
     onMount(async () => {
@@ -79,16 +107,34 @@
         const incompletePlan = JSON.parse(String(sessionStorage.getItem('incomplete')));
         const allSchedules = await getAllSchedules(url, incompletePlan.schedules);
         if (incompletePlan.host === userID){
-            const availableDatesStrings = allSchedules.map(schedule => schedule.dates).flat();
-            availableDates = availableDatesStrings.map(date => new Date(date));
-            console.log(availableDates);
+            condenseAllDates(allSchedules);
         }
         userSchedule = allSchedules.find(schedule => schedule.userID === userID)!;
+        loading = false;
     })
 </script>
+{#if loading}
+    <p>loading lol</p>
+{:else if editing}
+<div class="flex flex-col space-y-6 h-[100%] w-[100%]">
+    <div class="relative">
+        <button on:click={editToggle} class="absolute top-0 left-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+        </button>
+    </div>
+    <div class="flex flex-col">
+        <p class="text-lg pb-6 pt-20 md:pt-0">Choose your availability:</p>
+        <EditCalendar />
+    </div>
 
+    <div class="flex flex-col justify-evenly">
+        <button on:click={ () => handleEditConfirmClick() } class="bg-primary py-2 px-10 rounded text-lg">Confirm</button>
+    </div>
+</div>
 <!--If the user is the host user-->
-{#if incompletePlan.host === userID}
+{:else if incompletePlan.host === userID}
     <div class="flex flex-col space-y-6 h-[100%] w-[100%]">
         <div class="relative">
             <a href="/" class="absolute top-0 left-0">
@@ -118,45 +164,31 @@
             {#if copiedToClipboard}
                 <p class="copied-text text-accent">Copied to clipboard!</p>
             {/if}
+            <div class="flex flex-col space-y-6 justify-evenly items-center">
+                <button on:click={editToggle} class="text-accent text-lg">Change your availability</button>
+            </div>
         </div>
     </div>
 <!--If the user is a guest-->
 {:else}
-    {#if !editing}
-        <div class="flex flex-col space-y-10 justify-center h-[100%]">
-            <div class="relative">
-                <a href="/" class="absolute top-0 left-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
-                </a>
-            </div>
-            <h1 class="text-2xl">Let's get this out the chat.</h1>
+    <div class="flex flex-col space-y-6 h-[100%] w-[100%]">
+        <div class="relative">
+            <a href="/" class="absolute top-0 left-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="flex flex-col">
+            <h1 class="text-2xl pb-6 pt-60 md:pt-20">Let's get this out the chat.</h1>
             <p class="px-5">Your schedule is already in this plan, wait till the host finalizes the date and we'll put it in your
                 schedule.</p>
-            <div class="flex flex-col space-y-6 justify-evenly items-center">
-                <button on:click={onButtonClick} class="bg-primary py-2 px-10 rounded-xl text-lg">Change your availability</button>
-            </div>
         </div>
-    {:else}
-        <div class="flex flex-col space-y-6 h-[100%] w-[100%]">
-            <div class="relative">
-                <a href="/" class="absolute top-0 left-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
-                </a>
-            </div>
-            <div class="flex flex-col">
-                <p class="text-lg pb-6 pt-20 md:pt-0">Choose your availability:</p>
-                <EditCalendar />
-            </div>
-
-            <div class="flex flex-col justify-evenly">
-                <button on:click={ () => handleEditConfirmClick() } class="bg-primary py-2 px-10 rounded text-lg">Confirm</button>
-            </div>
+        <div class="flex flex-col space-y-6 justify-evenly items-center">
+            <button on:click={editToggle} class="bg-primary py-2 px-10 rounded-xl text-lg">Change your availability</button>
         </div>
-    {/if}
+    </div>
 {/if}
 
 <style>
